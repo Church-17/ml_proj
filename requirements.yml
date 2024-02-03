@@ -1,0 +1,4 @@
+name: ML-proj
+dependencies:
+  - python
+  - tk
