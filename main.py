@@ -21,6 +21,7 @@ class ML_Project_GUI:
         self.window.focus_force()
         self.window.geometry("500x500")
         self.window.minsize(400, 400)
+        self.window.iconbitmap("icon.ico")
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)
 
@@ -156,6 +157,7 @@ class ML_Project_GUI:
             # Combobox for distance function
             self.distance_label = Label(self.classifier_option_frame, text="Distance:")
             self.distance_spinbox = Combobox(self.classifier_option_frame)
+            self.distance_spinbox['values'] = ('Euclidean', 'Manhattan', 'Chebychev')
             self.distance_label.grid(row=0, column=1)
             self.distance_spinbox.grid(row=1, column=1)
 
