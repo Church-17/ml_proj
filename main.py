@@ -6,7 +6,6 @@ class ML_Project_GUI:
         self.title = "Machine Learning Project"
         self.dataset = dataset
         self.setup_window()
-        self.window.mainloop()
 
     # Initialize window
     def setup_window(self):
@@ -59,14 +58,16 @@ class ML_Project_GUI:
         # Bottom frame
         self.bottom_frame = Frame(self.window)
         self.notify_label = Label(self.bottom_frame, font=("Segoe UI", 10))
-        self.save_button = Button(self.bottom_frame, text="Salva", state=tk.DISABLED)
-        self.upload_button = Button(self.bottom_frame, text="Chiudi", command=self.window.destroy)
+        self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED)
+        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED)
+        self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
         self.bottom_frame.grid(row=2, column=0, padx=10, pady=12, sticky=tk.EW)
         self.bottom_frame.columnconfigure(0, weight=1)
         self.notify_label.grid(row=0, column=0, padx=5, pady=5)
-        self.save_button.grid(row=0, column=1, padx=5, pady=5)
-        self.upload_button.grid(row=0, column=2, padx=5, pady=5)
+        self.start_button.grid(row=0, column=1, padx=5, pady=5)
+        self.roc_button.grid(row=0, column=2, padx=5, pady=5)
+        self.close_button.grid(row=0, column=3, padx=5, pady=5)
 
     def classifier_selected(self, event):
         pass
@@ -75,7 +76,8 @@ class ML_Project_GUI:
 
 def main():
     dataset = None # Open csv
-    ML_Project_GUI(dataset)
+    GUI = ML_Project_GUI(dataset)
+    GUI.window.mainloop()
 
 
 if __name__ == "__main__":
