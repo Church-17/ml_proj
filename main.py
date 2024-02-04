@@ -31,13 +31,12 @@ class ML_Project_GUI:
         self.transformation_combo = Combobox(self.preproc_frame)
         
         self.preproc_frame.grid(row=0, column=0, sticky=tk.EW)
-        self.preproc_frame.columnconfigure(0, weight=1)
-        self.preproc_frame.columnconfigure(1, weight=1)
+        self.preproc_frame.columnconfigure((0, 1), weight=1)
         self.preproc_title.grid(row=0, column=0, columnspan=2, pady=8)
-        self.sampling_title.grid(row=1, column=0, padx=20, pady=(5,0))
-        self.balancing_title.grid(row=1, column=1, padx=20, pady=(5,0))
-        self.reduction_title.grid(row=3, column=0, padx=20, pady=(5,0))
-        self.transformation_title.grid(row=3, column=1, padx=20, pady=(5,0))
+        self.sampling_title.grid(row=1, column=0, padx=20, pady=(5, 0))
+        self.balancing_title.grid(row=1, column=1, padx=20, pady=(5, 0))
+        self.reduction_title.grid(row=3, column=0, padx=20, pady=(5, 0))
+        self.transformation_title.grid(row=3, column=1, padx=20, pady=(5, 0))
         self.sampling_combo.grid(row=2, column=0, padx=20, pady=2, sticky=tk.EW)
         self.balancing_combo.grid(row=2, column=1, padx=20, pady=2, sticky=tk.EW)
         self.reduction_combo.grid(row=4, column=0, padx=20, pady=2, sticky=tk.EW)
@@ -50,10 +49,9 @@ class ML_Project_GUI:
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_selected)
         
         self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.EW)
-        self.classifier_frame.columnconfigure(0, weight=1)
-        self.classifier_frame.columnconfigure(1, weight=1)
+        self.classifier_frame.columnconfigure((0, 1), weight=1)
         self.classifier_frame.columnconfigure(2, weight=3)
-        self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20,7))
+        self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20, 7))
         self.classifier_combo.grid(row=1, column=0, columnspan=3)
 
         # Bottom frame
