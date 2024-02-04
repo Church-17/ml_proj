@@ -93,35 +93,40 @@ class ML_Project_GUI:
 
             # Radiobutton for hard or soft voting
             self.voting_var = tk.IntVar()
-            self.hardvoting_rb = Radiobutton(self.classifier_option_frame, text="Hard voting", variable=self.voting_var, value=0)
-            self.softvoting_rb = Radiobutton(self.classifier_option_frame, text="Soft voting", variable=self.voting_var, value=1)
+            self.voting_frame = Frame(self.classifier_option_frame)
+            self.hardvoting_rb = Radiobutton(self.voting_frame, text="Hard voting", variable=self.voting_var, value=0)
+            self.softvoting_rb = Radiobutton(self.voting_frame, text="Soft voting", variable=self.voting_var, value=1)
+            self.voting_frame.grid(row=0, column=0)
             self.hardvoting_rb.grid(row=0, column=0, sticky=tk.W)
             self.softvoting_rb.grid(row=1, column=0, sticky=tk.W)
 
             # Radiobutton for weight or no
             self.weight_var = tk.IntVar()
-            self.unweighted_rb = Radiobutton(self.classifier_option_frame, text="Non weighted", variable=self.weight_var, value=0, command=self.weight_options)
-            self.weighted_rb = Radiobutton(self.classifier_option_frame, text="Weighted", variable=self.weight_var, value=1, command=self.weight_options)
-            self.unweighted_rb.grid(row=0, column=1, sticky=tk.W)
-            self.weighted_rb.grid(row=1, column=1, sticky=tk.W)
+            self.weight_frame = Frame(self.classifier_option_frame)
+            self.unweighted_rb = Radiobutton(self.weight_frame, text="Non weighted", variable=self.weight_var, value=0, command=self.weight_options)
+            self.weighted_rb = Radiobutton(self.weight_frame, text="Weighted", variable=self.weight_var, value=1, command=self.weight_options)
+            self.weight_frame.grid(row=0, column=1)
+            self.unweighted_rb.grid(row=0, column=0, sticky=tk.W)
+            self.weighted_rb.grid(row=1, column=0, sticky=tk.W)
 
             # Spinbox for weights
-            self.weights_label = Label(self.classifier_option_frame, text="Weights:")
-            self.weight_frame = Frame(self.classifier_option_frame)
-            self.weight1 = Spinbox(self.weight_frame, from_=0, to=100, width=4, state=tk.DISABLED)
-            self.weight2 = Spinbox(self.weight_frame, from_=0, to=100, width=4, state=tk.DISABLED)
-            self.weight3 = Spinbox(self.weight_frame, from_=0, to=100, width=4, state=tk.DISABLED)
+            self.weights_frame = Frame(self.classifier_option_frame)
+            self.weights_label = Label(self.weights_frame, text="Weights:")
+            self.weight1 = Spinbox(self.weights_frame, from_=0, to=100, width=4, state=tk.DISABLED)
+            self.weight2 = Spinbox(self.weights_frame, from_=0, to=100, width=4, state=tk.DISABLED)
+            self.weight3 = Spinbox(self.weights_frame, from_=0, to=100, width=4, state=tk.DISABLED)
             self.weight1.set(1)
             self.weight2.set(1)
             self.weight3.set(1)
-            self.weights_label.grid(row=0, column=2)
-            self.weight_frame.grid(row=1, column=2)
-            self.weight1.grid(row=0, column=0, padx=4)
-            self.weight2.grid(row=0, column=1, padx=4)
-            self.weight3.grid(row=0, column=2, padx=4)
+            self.weights_frame.grid(row=0, column=2)
+            self.weights_label.grid(row=0, column=0, columnspan=3)
+            self.weight1.grid(row=1, column=0, padx=4)
+            self.weight2.grid(row=1, column=1, padx=4)
+            self.weight3.grid(row=1, column=2, padx=4)
 
         elif(selected_option == 'K nearest neighbor'):
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
             
             self.k_label = Label(self.classifier_option_frame, text="K value:")
             self.k_spinbox = Spinbox(self.classifier_option_frame, from_=1, to=100, width=4)
@@ -131,11 +136,14 @@ class ML_Project_GUI:
 
         elif(selected_option == 'Decision tree'): 
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
             # Radiobutton per "Post-Pruning" e "Pre-pruning"
             self.prune_var = tk.IntVar()
-            self.pre_pruning_rb = Radiobutton(self.classifier_option_frame, text="Pre-pruning", variable=self.prune_var, value=0)
-            self.post_pruning_rb = Radiobutton(self.classifier_option_frame, text="Post-Pruning", variable=self.prune_var, value=1)
+            self.prune_frame = Frame(self.classifier_option_frame)
+            self.pre_pruning_rb = Radiobutton(self.prune_frame, text="Pre-pruning", variable=self.prune_var, value=0)
+            self.post_pruning_rb = Radiobutton(self.prune_frame, text="Post-Pruning", variable=self.prune_var, value=1)
+            self.prune_frame.grid(row=0, column=0)
             self.pre_pruning_rb.grid(row=0, column=0, sticky=tk.W)
             self.post_pruning_rb.grid(row=1, column=0, sticky=tk.W)
 
