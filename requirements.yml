@@ -1,4 +1,6 @@
 name: ML-proj
 dependencies:
   - python
+  - pip
   - tk
+  - scikit-learn
