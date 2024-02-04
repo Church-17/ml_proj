@@ -51,25 +51,46 @@ class ML_Project_GUI:
         # Classifier frame
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
-        self.classifier_combo = Combobox(self.classifier_frame, width=60)
+        self.classifier_combo = Combobox(self.classifier_frame, width=40)
         self.classifier_combo['values'] = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_options)
         self.classifier_option_frame = Frame(self.classifier_frame)
         
-        self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.EW)
+        self.classifier_frame.grid(row=1, column=0, sticky=tk.N+tk.EW)
         self.classifier_frame.columnconfigure(0, weight=1)
-        self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20, 7))
-        self.classifier_combo.grid(row=1, column=0, columnspan=3)
+        self.classifier_title.grid(row=0, column=0, pady=(20, 7))
+        self.classifier_combo.grid(row=1, column=0)
         self.classifier_option_frame.grid(row=2, column=0, padx=20, pady=10, sticky=tk.EW)
+
+        # Result frame
+        self.result_frame = Frame(self.window)
+        self.result_title = Label(self.result_frame, text="Performance", font=("Helvetica", 12))
+        self.accuracy_label = Label(self.result_frame, text="Accuracy")
+        self.sensibility_label = Label(self.result_frame, text="Sensibility")
+        self.specificity_label = Label(self.result_frame, text="Specificity")
+        self.accuracy = Label(self.result_frame)
+        self.sensibility = Label(self.result_frame)
+        self.specificity = Label(self.result_frame)
+        
+
+        self.result_frame.grid(row=2, column=0, sticky=tk.S+tk.EW, pady=5)
+        self.result_frame.columnconfigure(tuple(range(3)), weight=1)
+        self.result_title.grid(row=0, column=0, columnspan=3, pady=7)
+        self.accuracy_label.grid(row=1, column=0)
+        self.sensibility_label.grid(row=1, column=1)
+        self.specificity_label.grid(row=1, column=2)
+        self.accuracy.grid(row=2, column=0)
+        self.sensibility.grid(row=2, column=1)
+        self.specificity.grid(row=2, column=2)
 
         # Bottom frame
         self.bottom_frame = Frame(self.window)
-        self.notify_label = Label(self.bottom_frame, font=("Helvetica", 10))
+        self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED)
         self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
-        self.bottom_frame.grid(row=4, column=0, padx=10, pady=12, sticky=tk.EW)
+        self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
         self.bottom_frame.columnconfigure(0, weight=1)
         self.notify_label.grid(row=0, column=0, padx=5, pady=5)
         self.start_button.grid(row=0, column=1, padx=5, pady=5)
@@ -81,11 +102,10 @@ class ML_Project_GUI:
         selected_option = self.classifier_combo.get()
         if self.classifier_picked == selected_option:
             return
+        
         self.classifier_picked = selected_option
-
-        if self.classifier_picked:
-            self.start_button.config(state=tk.ACTIVE) # Enable training
-
+        self.start_button.config(state=tk.ACTIVE) # Enable training
+        self.notify_label.config(text="Classifier chosen", foreground="green")
         self.classifier_option_frame.destroy_child()
 
         if selected_option == 'Ensamble classifier':
