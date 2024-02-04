@@ -48,9 +48,9 @@ class ML_Project_GUI:
         # Classifier frame
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
-        self.classifier_combo = Combobox(self.classifier_frame, width=60) #l'ho aumentato un po, da 40 a 60
-        self.classifier_combo['values'] = ('Nessuna Selezione', 'Classificatore Multiplo', 'Alberi Decisionali', 'KNN')
-        self.classifier_combo.current(0)
+        self.classifier_combo = Combobox(self.classifier_frame, width=60)
+        self.classifier_combo['values'] = ('Classificatore Multiplo', 'Alberi Decisionali', 'KNN')
+        # self.classifier_combo.current(0)
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_selected)
         
         self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.EW)
@@ -76,17 +76,18 @@ class ML_Project_GUI:
 
 
     def classifier_selected(self, event):
+        self.start_button.config(state=tk.ACTIVE)
         # Distrugge i widget se esistono
         if hasattr(self, 'classifier_multi'):
             self.classifier_multi.destroy()
         if hasattr(self, 'hardvoting_cb'):
-            self.hardvoting_cb.destroy()
+            self.hardvoting_rb.destroy()
         if hasattr(self, 'softvoting_cb'):
-            self.softvoting_cb.destroy()
+            self.softvoting_rb.destroy()
         if hasattr(self, 'weighted_cb'):
-            self.weighted_cb.destroy()
+            self.weighted_rb.destroy()
         if hasattr(self, 'unweighted_cb'):
-            self.unweighted_cb.destroy()
+            self.unweighted_rb.destroy()
         if hasattr(self, 'weights_label'):
             self.weights_label.destroy()
         if hasattr(self, 'weights_frame'):
@@ -102,9 +103,9 @@ class ML_Project_GUI:
         if hasattr(self, 'k_spinbox'):
             self.k_spinbox.destroy()
         if hasattr(self, 'post_pruning_cb'):
-            self.post_pruning_cb.destroy()
+            self.post_pruning_rb.destroy()
         if hasattr(self, 'pre_pruning_cb'):
-            self.pre_pruning_cb.destroy()
+            self.pre_pruning_rb.destroy()
         selected_option = self.classifier_combo.get()
         if selected_option == 'Classificatore Multiplo':
             self.classifier_multi = Frame(self.window)
@@ -117,15 +118,15 @@ class ML_Project_GUI:
             self.vote_var = StringVar(value="none")
             self.hardvoting_rb = Radiobutton(self.classifier_multi, text="hardvoting", variable=self.vote_var, value="hardvoting")
             self.softvoting_rb = Radiobutton(self.classifier_multi, text="softvoting", variable=self.vote_var, value="softvoting")
-            self.hardvoting_rb.grid(row=0, column=0, sticky='W')
-            self.softvoting_rb.grid(row=1, column=0, sticky='W')
+            self.hardvoting_rb.grid(row=0, column=0, sticky=tk.W)
+            self.softvoting_rb.grid(row=1, column=0, sticky=tk.W)
 
             # Radiobutton per "pesato" e "non pesato"
             self.weight_var = StringVar(value="none")
             self.weighted_rb = Radiobutton(self.classifier_multi, text="pesato", variable=self.weight_var, value="pesato")
             self.unweighted_rb = Radiobutton(self.classifier_multi, text="non pesato", variable=self.weight_var, value="non pesato")
-            self.weighted_rb.grid(row=0, column=1, sticky='W')
-            self.unweighted_rb.grid(row=1, column=1, sticky='W')
+            self.weighted_rb.grid(row=0, column=1, sticky=tk.W)
+            self.unweighted_rb.grid(row=1, column=1, sticky=tk.W)
 
 
             # Label e spinbox per "pesi"
@@ -162,10 +163,8 @@ class ML_Project_GUI:
             self.classifier_multi.grid(row=3, column=0, pady=10, padx=10, sticky=tk.EW)
             self.classifier_multi.columnconfigure(0, weight=1)
 
-            # Variabile per i Radiobutton
-            self.prune_var = StringVar(value="none")
-
             # Radiobutton per "Post-Pruning" e "Pre-pruning"
+            self.prune_var = StringVar(value="none")
             self.post_pruning_rb = Radiobutton(self.classifier_multi, text="Post-Pruning", variable=self.prune_var, value="post")
             self.pre_pruning_rb = Radiobutton(self.classifier_multi, text="Pre-pruning", variable=self.prune_var, value="pre")
             self.post_pruning_rb.grid(row=0, column=0, sticky='W')
