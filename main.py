@@ -8,7 +8,9 @@ class ML_Project_GUI:
         self.setup_window()
         self.window.mainloop()
 
+    # Initialize window
     def setup_window(self):
+        # Window
         self.window = tk.Tk()
         self.window.geometry("500x500")
         self.window.title(self.title)
@@ -16,6 +18,7 @@ class ML_Project_GUI:
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)
 
+        # Preprocessing frame
         self.preproc_frame = Frame(self.window)
         self.preproc_title = Label(self.preproc_frame, text="Data Preprocessing", font=("Helvetica", 12))
         self.sampling_title = Label(self.preproc_frame, text="Sampling")
@@ -40,20 +43,20 @@ class ML_Project_GUI:
         self.reduction_combo.grid(row=4, column=0, padx=20, pady=2, sticky=tk.EW)
         self.transformation_combo.grid(row=4, column=1, padx=20, pady=2, sticky=tk.EW)
         
-        
+        # Classifier frame
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
         self.classifier_combo = Combobox(self.classifier_frame, width=40)
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_selected)
         
-        self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N)
+        self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.EW)
         self.classifier_frame.columnconfigure(0, weight=1)
         self.classifier_frame.columnconfigure(1, weight=1)
         self.classifier_frame.columnconfigure(2, weight=3)
         self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20,7))
         self.classifier_combo.grid(row=1, column=0, columnspan=3)
 
-
+        # Bottom frame
         self.bottom_frame = Frame(self.window)
         self.notify_label = Label(self.bottom_frame, font=("Segoe UI", 10))
         self.save_button = Button(self.bottom_frame, text="Salva", state=tk.DISABLED)
