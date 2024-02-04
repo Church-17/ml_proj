@@ -125,14 +125,21 @@ class ML_Project_GUI:
             self.weight3.grid(row=1, column=2, padx=4)
 
         elif(selected_option == 'K nearest neighbor'):
-            self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(2, 3)), weight=0)
             
+            # Spinbox for K
             self.k_label = Label(self.classifier_option_frame, text="K value:")
             self.k_spinbox = Spinbox(self.classifier_option_frame, from_=1, to=100, width=4)
             self.k_spinbox.set(1)
             self.k_label.grid(row=0, column=0)
             self.k_spinbox.grid(row=1, column=0)
+
+            # Combobox for distance function
+            self.distance_label = Label(self.classifier_option_frame, text="Distance:")
+            self.distance_spinbox = Combobox(self.classifier_option_frame)
+            self.distance_label.grid(row=0, column=1)
+            self.distance_spinbox.grid(row=1, column=1)
 
         elif(selected_option == 'Decision tree'): 
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
@@ -146,9 +153,6 @@ class ML_Project_GUI:
             self.prune_frame.grid(row=0, column=0)
             self.pre_pruning_rb.grid(row=0, column=0, sticky=tk.W)
             self.post_pruning_rb.grid(row=1, column=0, sticky=tk.W)
-
-        else:
-            pass
 
     def weight_options(self):
         if self.weight_var.get() == 0:
