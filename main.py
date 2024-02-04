@@ -71,7 +71,6 @@ class ML_Project_GUI:
         self.accuracy = Label(self.result_frame)
         self.sensibility = Label(self.result_frame)
         self.specificity = Label(self.result_frame)
-        
 
         self.result_frame.grid(row=2, column=0, sticky=tk.S+tk.EW, pady=5)
         self.result_frame.columnconfigure(tuple(range(3)), weight=1)
@@ -96,7 +95,6 @@ class ML_Project_GUI:
         self.start_button.grid(row=0, column=1, padx=5, pady=5)
         self.roc_button.grid(row=0, column=2, padx=5, pady=5)
         self.close_button.grid(row=0, column=3, padx=5, pady=5)
-
 
     def classifier_options(self, event):
         selected_option = self.classifier_combo.get()
