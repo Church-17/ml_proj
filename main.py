@@ -145,7 +145,7 @@ class ML_Project_GUI:
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
             self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
-            # Radiobutton per "Post-Pruning" e "Pre-pruning"
+            # Radiobutton for pre or post pruning
             self.prune_var = tk.IntVar()
             self.prune_frame = Frame(self.classifier_option_frame)
             self.pre_pruning_rb = Radiobutton(self.prune_frame, text="Pre-pruning", variable=self.prune_var, value=0)
