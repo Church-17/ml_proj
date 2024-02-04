@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter.ttk import *
+from tkinter import IntVar, StringVar
+
 
 class ML_Project_GUI:
     def __init__(self, dataset):
@@ -31,12 +33,13 @@ class ML_Project_GUI:
         self.transformation_combo = Combobox(self.preproc_frame)
         
         self.preproc_frame.grid(row=0, column=0, sticky=tk.EW)
-        self.preproc_frame.columnconfigure((0, 1), weight=1)
+        self.preproc_frame.columnconfigure(0, weight=1)
+        self.preproc_frame.columnconfigure(1, weight=1)
         self.preproc_title.grid(row=0, column=0, columnspan=2, pady=8)
-        self.sampling_title.grid(row=1, column=0, padx=20, pady=(5, 0))
-        self.balancing_title.grid(row=1, column=1, padx=20, pady=(5, 0))
-        self.reduction_title.grid(row=3, column=0, padx=20, pady=(5, 0))
-        self.transformation_title.grid(row=3, column=1, padx=20, pady=(5, 0))
+        self.sampling_title.grid(row=1, column=0, padx=20, pady=(5,0))
+        self.balancing_title.grid(row=1, column=1, padx=20, pady=(5,0))
+        self.reduction_title.grid(row=3, column=0, padx=20, pady=(5,0))
+        self.transformation_title.grid(row=3, column=1, padx=20, pady=(5,0))
         self.sampling_combo.grid(row=2, column=0, padx=20, pady=2, sticky=tk.EW)
         self.balancing_combo.grid(row=2, column=1, padx=20, pady=2, sticky=tk.EW)
         self.reduction_combo.grid(row=4, column=0, padx=20, pady=2, sticky=tk.EW)
@@ -45,32 +48,92 @@ class ML_Project_GUI:
         # Classifier frame
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
-        self.classifier_combo = Combobox(self.classifier_frame, width=40)
+        self.classifier_combo = Combobox(self.classifier_frame, width=60) #l'ho aumentato un po, da 40 a 60
+        self.classifier_combo['values'] = ('Nessuna Selezione', 'Classificatore Multiplo', 'Opzione 2', 'Opzione 3')
+        self.classifier_combo.current(0)
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_selected)
         
         self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.EW)
-        self.classifier_frame.columnconfigure((0, 1), weight=1)
+        self.classifier_frame.columnconfigure(0, weight=1)
+        self.classifier_frame.columnconfigure(1, weight=1)
         self.classifier_frame.columnconfigure(2, weight=3)
-        self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20, 7))
+        self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20,7))
         self.classifier_combo.grid(row=1, column=0, columnspan=3)
 
         # Bottom frame
         self.bottom_frame = Frame(self.window)
-        self.notify_label = Label(self.bottom_frame, font=("Helvetica", 10))
+        self.notify_label = Label(self.bottom_frame, font=("Segoe UI", 10))
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED)
         self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
-        self.bottom_frame.grid(row=2, column=0, padx=10, pady=12, sticky=tk.EW)
+        self.bottom_frame.grid(row=4, column=0, padx=10, pady=12, sticky=tk.EW)
         self.bottom_frame.columnconfigure(0, weight=1)
         self.notify_label.grid(row=0, column=0, padx=5, pady=5)
         self.start_button.grid(row=0, column=1, padx=5, pady=5)
         self.roc_button.grid(row=0, column=2, padx=5, pady=5)
         self.close_button.grid(row=0, column=3, padx=5, pady=5)
 
-    def classifier_selected(self, event):
-        pass
 
+    def classifier_selected(self, event):
+        selected_option = self.classifier_combo.get()
+        if selected_option == 'Classificatore Multiplo':
+            self.classifier_multi = Frame(self.window)
+            self.classifier_multi.grid(row=3, column=0, pady=5, sticky=tk.EW)
+            self.classifier_multi.columnconfigure(0, weight=1)
+            self.classifier_multi.columnconfigure(1, weight=1)
+            self.classifier_multi.columnconfigure(2, weight=1)
+
+            # Checkbox per "hardvoting" e "softvoting"
+            self.vote_var = StringVar(value="none")
+            self.hardvoting_cb = Checkbutton(self.classifier_multi, text="hardvoting", variable=self.vote_var, onvalue="hardvoting")
+            self.softvoting_cb = Checkbutton(self.classifier_multi, text="softvoting", variable=self.vote_var, onvalue="softvoting")
+            self.hardvoting_cb.grid(row=0, column=0)
+            self.softvoting_cb.grid(row=1, column=0)
+
+            # Checkbox per "pesato" e "non pesato"
+            self.weight_var = StringVar(value="none")
+            self.weighted_cb = Checkbutton(self.classifier_multi, text="pesato", variable=self.weight_var, onvalue="pesato")
+            self.unweighted_cb = Checkbutton(self.classifier_multi, text="non pesato", variable=self.weight_var, onvalue="non pesato")
+            self.weighted_cb.grid(row=0, column=1)
+            self.unweighted_cb.grid(row=1, column=1)
+
+            # Label e spinbox per "pesi"
+            self.weights_label = Label(self.classifier_multi, text="pesi:")
+            self.weights_label.grid(row=0, column=2)
+            self.weights_frame = Frame(self.classifier_multi)
+            self.weights_frame.grid(row=1, column=2)
+
+            self.weight1 = Spinbox(self.weights_frame, from_=0, to=100, width=4)
+            self.weight2 = Spinbox(self.weights_frame, from_=0, to=100, width=4)
+            self.weight3 = Spinbox(self.weights_frame, from_=0, to=100, width=4)
+
+            self.weight1.pack(side="left", padx=5)
+            self.weight2.pack(side="left", padx=5)
+            self.weight3.pack(side="left", padx=5)
+
+        else:
+            # Distrugge i widget se esistono
+            if hasattr(self, 'classifier_multi'):
+                self.classifier_multi.destroy()
+            if hasattr(self, 'hardvoting_cb'):
+                self.hardvoting_cb.destroy()
+            if hasattr(self, 'softvoting_cb'):
+                self.softvoting_cb.destroy()
+            if hasattr(self, 'weighted_cb'):
+                self.weighted_cb.destroy()
+            if hasattr(self, 'unweighted_cb'):
+                self.unweighted_cb.destroy()
+            if hasattr(self, 'weights_label'):
+                self.weights_label.destroy()
+            if hasattr(self, 'weights_frame'):
+                self.weights_frame.destroy()
+            if hasattr(self, 'weight1'):
+                self.weight1.destroy()
+            if hasattr(self, 'weight2'):
+                self.weight2.destroy()
+            if hasattr(self, 'weight3'):
+                self.weight3.destroy()
 
 
 def main():
