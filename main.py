@@ -11,9 +11,10 @@ class ML_Project_GUI:
     def setup_window(self):
         # Window
         self.window = tk.Tk()
-        self.window.geometry("500x500")
         self.window.title(self.title)
         self.window.focus_force()
+        self.window.geometry("500x500")
+        self.window.minsize(400, 400)
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)
 
