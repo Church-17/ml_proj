@@ -56,7 +56,7 @@ class ML_Project_GUI:
 
         # Bottom frame
         self.bottom_frame = Frame(self.window)
-        self.notify_label = Label(self.bottom_frame, font=("Segoe UI", 10))
+        self.notify_label = Label(self.bottom_frame, font=("Helvetica", 10))
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED)
         self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
