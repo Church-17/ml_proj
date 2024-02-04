@@ -172,7 +172,7 @@ class ML_Project_GUI:
             self.pre_pruning_rb.grid(row=0, column=0, sticky=tk.W)
             self.post_pruning_rb.grid(row=1, column=0, sticky=tk.W)
 
-    def weight_options(self):
+    def weight_options(self): # managing weight selection
         if self.weight_var.get() == 0:
             self.weight1.config(state=tk.DISABLED)
             self.weight2.config(state=tk.DISABLED)
