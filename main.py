@@ -33,7 +33,7 @@ class ML_Project_GUI:
         self.preproc_frame.grid(row=0, column=0, sticky=tk.EW)
         self.preproc_frame.columnconfigure(0, weight=1)
         self.preproc_frame.columnconfigure(1, weight=1)
-        self.preproc_title.grid(row=0, column=0, columnspan=3, pady=8)
+        self.preproc_title.grid(row=0, column=0, columnspan=2, pady=8)
         self.sampling_title.grid(row=1, column=0, padx=20, pady=(5,0))
         self.balancing_title.grid(row=1, column=1, padx=20, pady=(5,0))
         self.reduction_title.grid(row=3, column=0, padx=20, pady=(5,0))
