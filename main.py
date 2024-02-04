@@ -44,6 +44,7 @@ class ML_Project_GUI:
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
         self.classifier_combo = Combobox(self.classifier_frame, width=40)
+        self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_selected)
         
         self.classifier_frame.grid(row=1, column=0, columnspan=3, sticky=tk.N)
         self.classifier_frame.columnconfigure(0, weight=1)
