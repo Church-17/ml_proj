@@ -6,9 +6,13 @@ classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor'
 purity_tuple = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
 distance_tuple = ('Gini', 'Entropy', 'Classification error', 'Tuning')
 
-def start_classification(classifier_str, dataset):
+def start_classification(classifier_str, dataset, params):
     if classifier_str == classifier_tuple[1]:
         classifier_obj = DecisionTreeClassifier
+        params['max_depth']: [None]+list(range(2,30,2))
+        params['max_features']: ["sqrt", "log2"]
+        params['min_samples_leaf']: list(range(1,10,1))
+        params['min_samples_split']: list(range(2,10,1))
     elif classifier_str == classifier_tuple[2]:
         classifier_obj = KNeighborsClassifier
 
