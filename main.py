@@ -83,6 +83,9 @@ class ML_Project_GUI:
         self.sensibility.grid(row=2, column=1)
         self.specificity.grid(row=2, column=2)
 
+        # Progressbar
+        
+
         # Bottom frame
         self.bottom_frame = Frame(self.window)
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
@@ -156,10 +159,11 @@ class ML_Project_GUI:
 
             # Combobox for distance function
             self.distance_label = Label(self.classifier_option_frame, text="Distance:")
-            self.distance_spinbox = Combobox(self.classifier_option_frame)
-            self.distance_spinbox['values'] = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
+            self.distance_combobox = Combobox(self.classifier_option_frame)
+            self.distance_combobox['values'] = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
+            self.distance_combobox.current(0)
             self.distance_label.grid(row=0, column=1)
-            self.distance_spinbox.grid(row=1, column=1)
+            self.distance_combobox.grid(row=1, column=1)
 
         elif(selected_option == 'Decision tree'): 
             self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
@@ -177,11 +181,12 @@ class ML_Project_GUI:
             # Combobox for purity function
             self.purity_frame = Frame(self.classifier_option_frame)
             self.purity_label = Label(self.purity_frame, text="Purity:")
-            self.purity_spinbox = Combobox(self.purity_frame)
-            self.purity_spinbox['values'] = ('Gini', 'Entropy', 'Classification error', 'Tuning')
+            self.purity_combobox = Combobox(self.purity_frame)
+            self.purity_combobox['values'] = ('Gini', 'Entropy', 'Classification error', 'Tuning')
+            self.purity_combobox.current(0)
             self.purity_frame.grid(row=0, column=1)
             self.purity_label.grid(row=0, column=0)
-            self.purity_spinbox.grid(row=1, column=0)
+            self.purity_combobox.grid(row=1, column=0)
 
     def weight_options(self): # managing weight selection
         if self.weight_var.get() == 0:
