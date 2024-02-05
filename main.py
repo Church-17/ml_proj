@@ -6,6 +6,14 @@ def destroy_child(frame:Frame):
         widget.destroy()
 Frame.destroy_child = destroy_child
 
+sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
+balancing_tuple = ('No balancing', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN', 'Hybrid SMOTEENN')
+reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature Agglomeration')
+transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
+classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
+purity_tuple = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
+distance_tuple = ('Gini', 'Entropy', 'Classification error', 'Tuning')
+
 class ML_Project_GUI:
     def __init__(self, dataset):
         self.title:str = "Machine Learning Project"
@@ -33,16 +41,16 @@ class ML_Project_GUI:
         self.reduction_title = Label(self.preproc_frame, text="Dimensionality reduction")
         self.transformation_title = Label(self.preproc_frame, text="Transformation")
         self.sampling_combo = Combobox(self.preproc_frame, state='readonly')
-        self.sampling_combo['values'] = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
+        self.sampling_combo['values'] = sampling_tuple
         self.sampling_combo.current(0)
         self.balancing_combo = Combobox(self.preproc_frame, state='readonly')
-        self.balancing_combo['values'] = ('No balancing', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN', 'Hybrid SMOTEENN')
+        self.balancing_combo['values'] = balancing_tuple
         self.balancing_combo.current(0)
         self.reduction_combo = Combobox(self.preproc_frame, state='readonly')
-        self.reduction_combo['values'] = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature Agglomeration')
+        self.reduction_combo['values'] = reduction_tuple
         self.reduction_combo.current(0)
         self.transformation_combo = Combobox(self.preproc_frame, state='readonly')
-        self.transformation_combo['values'] = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
+        self.transformation_combo['values'] = transformation_tuple
         self.transformation_combo.current(0)
         
         self.preproc_frame.grid(row=0, column=0, sticky=tk.EW)
@@ -61,7 +69,7 @@ class ML_Project_GUI:
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
         self.classifier_combo = Combobox(self.classifier_frame, width=40, state='readonly')
-        self.classifier_combo['values'] = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
+        self.classifier_combo['values'] = classifier_tuple
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_options)
         self.classifier_option_frame = Frame(self.classifier_frame)
         
@@ -167,7 +175,7 @@ class ML_Project_GUI:
             # Combobox for distance function
             self.distance_label = Label(self.classifier_option_frame, text="Distance:")
             self.distance_combobox = Combobox(self.classifier_option_frame, state='readonly')
-            self.distance_combobox['values'] = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
+            self.distance_combobox['values'] = distance_tuple
             self.distance_combobox.current(0)
             self.distance_label.grid(row=0, column=1)
             self.distance_combobox.grid(row=1, column=1)
@@ -189,7 +197,7 @@ class ML_Project_GUI:
             self.purity_frame = Frame(self.classifier_option_frame)
             self.purity_label = Label(self.purity_frame, text="Purity:")
             self.purity_combobox = Combobox(self.purity_frame, state='readonly')
-            self.purity_combobox['values'] = ('Gini', 'Entropy', 'Classification error', 'Tuning')
+            self.purity_combobox['values'] = purity_tuple
             self.purity_combobox.current(0)
             self.purity_frame.grid(row=0, column=1)
             self.purity_label.grid(row=0, column=0)
@@ -204,6 +212,9 @@ class ML_Project_GUI:
             self.weight1.config(state=tk.ACTIVE)
             self.weight2.config(state=tk.ACTIVE)
             self.weight3.config(state=tk.ACTIVE)
+
+    def start_classifier(self):
+        pass
 
 
 
