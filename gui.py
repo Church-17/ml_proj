@@ -102,6 +102,7 @@ class ML_Project_GUI:
         self.bottom_frame = Frame(self.window)
         self.progressbar = Progressbar(self.bottom_frame, mode='determinate', length=400)
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
+        self.analisys_button = Button(self.bottom_frame, text="Data Analisys", command=self.start_analisys) 
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.start_classification)
         self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.roc_curve)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
@@ -110,9 +111,33 @@ class ML_Project_GUI:
         self.bottom_frame.columnconfigure(0, weight=1)
         self.progressbar.grid(row=0, column=0, columnspan=4, padx=5, pady=5)
         self.notify_label.grid(row=1, column=0, padx=5, pady=5)
-        self.start_button.grid(row=1, column=1, padx=5, pady=5)
-        self.roc_button.grid(row=1, column=2, padx=5, pady=5)
-        self.close_button.grid(row=1, column=3, padx=5, pady=5)
+        self.analisys_button.grid(row=1, column=1, padx=5, pady=5)
+        self.start_button.grid(row=1, column=2, padx=5, pady=5)
+        self.roc_button.grid(row=1, column=3, padx=5, pady=5)
+        self.close_button.grid(row=1, column=4, padx=5, pady=5)
+
+
+
+
+    def start_analisys(self):
+        self.window2 = tk.Toplevel()
+        self.window2.geometry('600x600')
+        self.title:str = "INFORMAZIONI SUL DATASET"
+        self.window2.title(self.title)
+
+        self.data_frame = Frame(self.window2)
+        self.preproc_title2 = Label(self.data_frame, text="Data preprocessing", font=("Helvetica", 12))
+        self.data_frame.columnconfigure((0, 1), weight=1)
+        self.data_frame.grid(row=0, column=1, sticky=tk.EW)
+
+
+
+
+ 
+ 
+
+
+
 
     def classifier_options(self, event):
         selected_option = self.classifier_combo.get()
