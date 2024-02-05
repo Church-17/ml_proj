@@ -83,11 +83,9 @@ class ML_Project_GUI:
         self.sensibility.grid(row=2, column=1)
         self.specificity.grid(row=2, column=2)
 
-        # Progressbar
-        
-
         # Bottom frame
         self.bottom_frame = Frame(self.window)
+        self.progressbar = Progressbar(self.bottom_frame, mode='determinate', length=400)
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED)
         self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED)
@@ -95,10 +93,11 @@ class ML_Project_GUI:
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
         self.bottom_frame.columnconfigure(0, weight=1)
-        self.notify_label.grid(row=0, column=0, padx=5, pady=5)
-        self.start_button.grid(row=0, column=1, padx=5, pady=5)
-        self.roc_button.grid(row=0, column=2, padx=5, pady=5)
-        self.close_button.grid(row=0, column=3, padx=5, pady=5)
+        self.progressbar.grid(row=0, column=0, columnspan=4, padx=5, pady=5)
+        self.notify_label.grid(row=1, column=0, padx=5, pady=5)
+        self.start_button.grid(row=1, column=1, padx=5, pady=5)
+        self.roc_button.grid(row=1, column=2, padx=5, pady=5)
+        self.close_button.grid(row=1, column=3, padx=5, pady=5)
 
     def classifier_options(self, event):
         selected_option = self.classifier_combo.get()
