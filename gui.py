@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter.ttk import *
+from dataset import split_attrib_class
+from sklearn.model_selection import train_test_split
 from classification import *
 from ROC import draw_roc_curve
 from Data_Analisys import start_analisys2
@@ -215,8 +217,14 @@ class ML_Project_GUI:
         classifier_params = {}
         if self.classifier_picked in classifier_tuple[1:3]:
             classifier_params['option'] = self.option_combobox.get()
-        classification(self.classifier_picked, self.dataset, classifier_params)
 
+        X, y = split_attrib_class(self.dataset)
+        # Preprocessing
+        train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
+        classification(self.classifier_picked, train_x, test_x, train_y, classifier_params)
+
+        self.progressbar.stop()
+        self.progressbar.config(mode='determinate')
 
     def start_analisys(self):
         start_analisys2(self)

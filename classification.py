@@ -1,5 +1,3 @@
-from dataset import split_attrib_class
-from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
@@ -12,7 +10,7 @@ distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correl
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
-def classification(classifier_str, dataset, gui_params):
+def classification(classifier_str, train_x, test_x, train_y, gui_params):
     params = {}
 
     if classifier_str == classifier_tuple[1]:
@@ -61,15 +59,11 @@ def classification(classifier_str, dataset, gui_params):
         classifier = CustomNaiveBayes()
 
 
-    X, y = split_attrib_class(dataset)
-    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
-
+    
     classifier.fit(train_x, train_y)
 
     pred_y = classifier.predict(test_x)
-
-    cm = confusion_matrix(test_y, pred_y)
-    print(compute_performances(cm))
+    return pred_y
 
 def compute_performances(cm):
     eps = np.finfo(float).eps
