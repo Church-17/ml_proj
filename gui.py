@@ -103,67 +103,18 @@ class ML_Project_GUI:
         self.progressbar = Progressbar(self.bottom_frame, mode='determinate', length=400)
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.analisys_button = Button(self.bottom_frame, text="Data Analisys", command=self.start_analisys) 
-        self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.start_classification)
+        self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.classification)
         self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.roc_curve)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
         self.bottom_frame.columnconfigure(0, weight=1)
-        self.progressbar.grid(row=0, column=0, columnspan=4, padx=5, pady=5)
+        self.progressbar.grid(row=0, column=0, columnspan=5, padx=5, pady=5)
         self.notify_label.grid(row=1, column=0, padx=5, pady=5)
         self.analisys_button.grid(row=1, column=1, padx=5, pady=5)
         self.start_button.grid(row=1, column=2, padx=5, pady=5)
         self.roc_button.grid(row=1, column=3, padx=5, pady=5)
         self.close_button.grid(row=1, column=4, padx=5, pady=5)
-
-
-
-
-    def start_analisys(self):
-        self.window2 = tk.Toplevel()
-        self.window2.geometry('600x600')
-        self.title:str = "INFORMAZIONI SUL DATASET"
-        self.window2.title(self.title)
-
-        self.data_frame = Frame(self.window2)
-        self.preproc_title2 = Label(self.data_frame, text="Data preprocessing", font=("Helvetica", 12))
-        self.data_frame.columnconfigure((0, 1), weight=1)
-        self.data_frame.grid(row=0, column=1, sticky=tk.EW)
-
-        X = self.dataset.iloc[:,:-1]
-        Q1=X.quantile(0.25) # calcolo primo quartile
-        Q3=X.quantile(0.75) # calcolo terzo quartile
-
-        """
-        self.label_general =  Label(self.data_frame, text='Statistiche generali:')
-        self.label_general2 = Label(self.data_frame, text = self.X.describe())
-        self.label_general.grid(row=1, column=0)
-        self.label_general2.grid(row=1, column=1)
-
-        self.label_general3 =  Label(self.data_frame, text='Numero dei valori non nulli per ogni attributo:' )
-        self.label_general4 = Label(self.data_frame, text = self.dataset.info(verbose = True))
-        self.label_general3.grid(row=1, column=0)
-        self.label_general4.grid(row=1, column=1)
-
-        self.label_general5 =  Label(self.data_frame, text='Valori nulli per ogni attributo:' )
-        self.label_general6 = Label(self.data_frame, text = self.X.isnull().any(axis=0))
-        self.label_general5.grid(row=1, column=0)
-        self.label_general6.grid(row=1, column=1)
-
-        self.label_general7 =  Label(self.data_frame, text='Outliers oltre il 90esimo e prima del decimo percentile:' )
-        self.label_general8 = Label(self.data_frame, text = self.dataset.DataFrame(X[(X<X.quantile(0.10)) | (X>X.quantile(0.90))]))
-        self.label_general9.grid(row=1, column=0)
-        self.label_general10.grid(row=1, column=1)
-        """
-
-
-
-
- 
- 
-
-
-
 
     def classifier_options(self, event):
         selected_option = self.classifier_combo.get()
@@ -212,46 +163,28 @@ class ML_Project_GUI:
             self.weight3.grid(row=1, column=2, padx=4)
 
         elif(selected_option == 'K nearest neighbor'):
-            self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(2, 3)), weight=0)
-            
-            # Spinbox for K
-            self.k_label = Label(self.classifier_option_frame, text="K value:")
-            self.k_spinbox = Spinbox(self.classifier_option_frame, from_=1, to=100, width=4)
-            self.k_spinbox.set(1)
-            self.k_label.grid(row=0, column=0)
-            self.k_spinbox.grid(row=1, column=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
             # Combobox for distance function
-            self.distance_label = Label(self.classifier_option_frame, text="Distance:")
-            self.distance_combobox = Combobox(self.classifier_option_frame, state='readonly')
-            self.distance_combobox['values'] = distance_tuple
-            self.distance_combobox.current(0)
-            self.distance_label.grid(row=0, column=1)
-            self.distance_combobox.grid(row=1, column=1)
+            self.option_label = Label(self.classifier_option_frame, text="Distance:")
+            self.option_combobox = Combobox(self.classifier_option_frame, state='readonly')
+            self.option_combobox['values'] = distance_tuple
+            self.option_combobox.current(0)
+            self.option_label.grid(row=0, column=0)
+            self.option_combobox.grid(row=1, column=0)
 
         elif(selected_option == 'Decision tree'): 
-            self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(2, 3)), weight=0)
-
-            # Radiobutton for pre or post pruning
-            self.prune_var = tk.IntVar()
-            self.prune_frame = Frame(self.classifier_option_frame)
-            self.pre_pruning_rb = Radiobutton(self.prune_frame, text="Pre-pruning", variable=self.prune_var, value=0)
-            self.post_pruning_rb = Radiobutton(self.prune_frame, text="Post-Pruning", variable=self.prune_var, value=1)
-            self.prune_frame.grid(row=0, column=0)
-            self.pre_pruning_rb.grid(row=0, column=0, sticky=tk.W)
-            self.post_pruning_rb.grid(row=1, column=0, sticky=tk.W)
+            self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
             # Combobox for purity function
-            self.purity_frame = Frame(self.classifier_option_frame)
-            self.purity_label = Label(self.purity_frame, text="Purity:")
-            self.purity_combobox = Combobox(self.purity_frame, state='readonly')
-            self.purity_combobox['values'] = purity_tuple
-            self.purity_combobox.current(0)
-            self.purity_frame.grid(row=0, column=1)
-            self.purity_label.grid(row=0, column=0)
-            self.purity_combobox.grid(row=1, column=0)
+            self.option_label = Label(self.classifier_option_frame, text="Purity:")
+            self.option_combobox = Combobox(self.classifier_option_frame, state='readonly')
+            self.option_combobox['values'] = purity_tuple
+            self.option_combobox.current(0)
+            self.option_label.grid(row=0, column=0)
+            self.option_combobox.grid(row=1, column=0)
 
     def weight_options(self): # managing weight selection
         if self.weight_var.get() == 0:
@@ -263,8 +196,48 @@ class ML_Project_GUI:
             self.weight2.config(state=tk.ACTIVE)
             self.weight3.config(state=tk.ACTIVE)
 
-    def start_classification(self):
-        start_classification(self.classifier_picked)
+    def classification(self):
+        classifier_params = {}
+        if self.classifier_picked in classifier_tuple[1:3]:
+            classifier_params['option'] = self.option_combobox.get()
+        init_classification(self.classifier_picked, self.dataset, classifier_params)
+
+    def start_analisys(self):
+        self.window2 = tk.Toplevel()
+        self.window2.geometry('600x600')
+        self.title:str = "INFORMAZIONI SUL DATASET"
+        self.window2.title(self.title)
+
+        self.data_frame = Frame(self.window2)
+        self.preproc_title2 = Label(self.data_frame, text="Data preprocessing", font=("Helvetica", 12))
+        self.data_frame.columnconfigure((0, 1), weight=1)
+        self.data_frame.grid(row=0, column=1, sticky=tk.EW)
+
+        X = self.dataset.iloc[:,:-1]
+        Q1=X.quantile(0.25) # calcolo primo quartile
+        Q3=X.quantile(0.75) # calcolo terzo quartile
+
+        """
+        self.label_general =  Label(self.data_frame, text='Statistiche generali:')
+        self.label_general2 = Label(self.data_frame, text = self.X.describe())
+        self.label_general.grid(row=1, column=0)
+        self.label_general2.grid(row=1, column=1)
+
+        self.label_general3 =  Label(self.data_frame, text='Numero dei valori non nulli per ogni attributo:' )
+        self.label_general4 = Label(self.data_frame, text = self.dataset.info(verbose = True))
+        self.label_general3.grid(row=1, column=0)
+        self.label_general4.grid(row=1, column=1)
+
+        self.label_general5 =  Label(self.data_frame, text='Valori nulli per ogni attributo:' )
+        self.label_general6 = Label(self.data_frame, text = self.X.isnull().any(axis=0))
+        self.label_general5.grid(row=1, column=0)
+        self.label_general6.grid(row=1, column=1)
+
+        self.label_general7 =  Label(self.data_frame, text='Outliers oltre il 90esimo e prima del decimo percentile:' )
+        self.label_general8 = Label(self.data_frame, text = self.dataset.DataFrame(X[(X<X.quantile(0.10)) | (X>X.quantile(0.90))]))
+        self.label_general9.grid(row=1, column=0)
+        self.label_general10.grid(row=1, column=1)
+        """
 
     def roc_curve(self):
         draw_roc_curve(self.y_test, self.y_pred_prob)

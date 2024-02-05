@@ -3,32 +3,47 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 
 classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
-purity_tuple = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
-distance_tuple = ('Gini', 'Entropy', 'Classification error', 'Tuning')
+distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
+purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 
-def start_classification(classifier_str, dataset, params):
+def init_classification(classifier_str, dataset, gui_params):
+    params = {}
+
     if classifier_str == classifier_tuple[1]:
-        classifier_obj = DecisionTreeClassifier
-        params['max_depth']: [None]+list(range(2,30,2))
-        params['max_features']: ["sqrt", "log2"]
-        params['min_samples_leaf']: list(range(1,10,1))
-        params['min_samples_split']: list(range(2,10,1))
+        if gui_params['option'] == purity_tuple[0]:
+            params['criterion'] = 'gini'
+        elif gui_params['option'] == purity_tuple[1]:
+            params['criterion'] = 'entropy'
+        elif gui_params['option'] == purity_tuple[2]:
+            params['criterion'] = 'log_loss'
+        params['max_depth'] = None
+        params['max_features'] = "sqrt"
+        params['min_samples_leaf'] = 10
+        params['min_samples_split'] = 10
+        classifier = DecisionTreeClassifier(**params)
+
     elif classifier_str == classifier_tuple[2]:
-        classifier_obj = KNeighborsClassifier
+        if gui_params['option'] == distance_tuple[0]:
+            params['weights'] = 'uniform'
+        elif gui_params['option'] == distance_tuple[1]:
+            params['weights'] = 'distance'
+            params['metric'] = 'euclidean'
+        elif gui_params['option'] == distance_tuple[2]:
+            params['weights'] = 'distance'
+            params['metric'] = 'manhattan'
+        elif gui_params['option'] == distance_tuple[3]:
+            params['weights'] = 'distance'
+            params['metric'] = 'cosine'
+        elif gui_params['option'] == distance_tuple[4]:
+            params['weights'] = 'distance'
+            params['metric'] = 'correlation'
+        params['n_neighbors'] = 10
+        classifier = KNeighborsClassifier(**params)
 
     X = dataset.data
     Y = dataset.target
     train_x, test_x, train_y, test_y = train_test_split(X, Y, random_state=0, test_size=0.25)
-    classifier = classifier_obj()
-    return classifier, train_x, test_x, train_y, test_y
 
-def tuning(classifier: DecisionTreeClassifier | KNeighborsClassifier, params, train_x, train_y):
-    tuner = GridSearchCV(classifier, params, cv=10, n_jobs=-1)
-    tuner.fit(train_x, train_y)
-    classifier.set_params(**tuner.best_params_)
-
-def training(classifier: DecisionTreeClassifier | KNeighborsClassifier, train_x, train_y):
     classifier.fit(train_x, train_y)
 
-def predicting(classifier: DecisionTreeClassifier | KNeighborsClassifier, test_x):
-    return classifier.predict(test_x)
+    pred_y = classifier.predict(test_x)
