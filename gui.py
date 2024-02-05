@@ -228,8 +228,9 @@ class ML_Project_GUI:
         X, y = split_attrib_class(self.dataset)
         X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
         train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
-        classification(self.classifier_picked, train_x, train_y, classifier_params)
-
+        classifier = classification(self.classifier_picked, train_x, train_y, classifier_params)
+        pred_y = classifier.predict(test_x)
+        print(compute_performances(test_y, pred_y))
         self.progressbar.stop()
         self.progressbar.config(mode='determinate')
 

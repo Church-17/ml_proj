@@ -9,5 +9,5 @@ def load_dataset(path):
 
 def split_attrib_class(df: DataFrame):
     X = df.iloc[:,:-1] # Retrieve attribute matrix
-    y = df.iloc[:,-1].to_numpy(dtype=int) # Retrieve class array
+    y = df.iloc[:,-1].to_numpy(dtype=int)[:,] # Retrieve class array
     return X, y
