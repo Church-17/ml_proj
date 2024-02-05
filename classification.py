@@ -11,7 +11,7 @@ distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correl
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
-def classification(classifier_str, train_x, test_x, train_y, gui_params):
+def classification(classifier_str, train_x, train_y, gui_params):
     params = {}
 
     if classifier_str == classifier_tuple[1]:
@@ -66,8 +66,8 @@ def classification(classifier_str, train_x, test_x, train_y, gui_params):
     
     classifier.fit(train_x, train_y)
 
-    pred_y = classifier.predict(test_x)
-    return pred_y
+    #pred_y = classifier.predict(test_x)
+    return classifier
 
 def compute_performances(test_y, pred_y):
     cm = confusion_matrix(test_y, pred_y)
