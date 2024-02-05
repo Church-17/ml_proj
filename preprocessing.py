@@ -6,7 +6,6 @@ from sklearn.cluster import FeatureAgglomeration
 from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, SequentialFeatureSelector
 from imblearn.under_sampling import RandomUnderSampler, InstanceHardnessThreshold, NearMiss, ClusterCentroids
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
-from sklearn.model_selection import StratifiedShuffleSplit, cross_validate
 from sklearn.neighbors import KNeighborsClassifier
 
 imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')

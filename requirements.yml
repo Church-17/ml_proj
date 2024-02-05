@@ -9,3 +9,4 @@ dependencies:
   - scipy
   - imbalanced-learn
   - matplotlib
+  - threadpoolctl>=3.2.0

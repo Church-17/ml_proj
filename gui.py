@@ -81,25 +81,40 @@ class ML_Project_GUI:
         self.result_frame = Frame(self.window)
         self.result_title = Label(self.result_frame, text="Performance", font=("Helvetica", 12))
         self.accuracy_label = Label(self.result_frame, text="Accuracy")
-        self.sensibility_label = Label(self.result_frame, text="Sensibility")
-        self.specificity_label = Label(self.result_frame, text="Specificity")
+        self.TPR_label = Label(self.result_frame, text="TPR")
+        self.TNR_label = Label(self.result_frame, text="TNR")
+        self.FPR_label = Label(self.result_frame, text="FPR")
+        self.FNR_label = Label(self.result_frame, text="FNR")
+        self.precision_label = Label(self.result_frame, text="Precision")
+        self.fmeasure_label = Label(self.result_frame, text="F-measure")
         self.accuracy = Label(self.result_frame)
-        self.sensibility = Label(self.result_frame)
-        self.specificity = Label(self.result_frame)
+        self.TPR = Label(self.result_frame)
+        self.TNR = Label(self.result_frame)
+        self.FPR = Label(self.result_frame)
+        self.FNR = Label(self.result_frame)
+        self.precision = Label(self.result_frame)
+        self.fmeasure = Label(self.result_frame)
 
         self.result_frame.grid(row=2, column=0, sticky=tk.S+tk.EW, pady=5)
-        self.result_frame.columnconfigure(tuple(range(3)), weight=1)
-        self.result_title.grid(row=0, column=0, columnspan=3, pady=7)
+        self.result_frame.columnconfigure(tuple(range(7)), weight=1)
+        self.result_title.grid(row=0, column=0, columnspan=7, pady=7)
         self.accuracy_label.grid(row=1, column=0)
-        self.sensibility_label.grid(row=1, column=1)
-        self.specificity_label.grid(row=1, column=2)
+        self.TPR_label.grid(row=1, column=1)
+        self.TNR_label.grid(row=1, column=2)
+        self.FPR_label.grid(row=1, column=3)
+        self.FNR_label.grid(row=1, column=4)
+        self.precision_label.grid(row=1, column=5)
+        self.fmeasure_label.grid(row=1, column=6)
         self.accuracy.grid(row=2, column=0)
-        self.sensibility.grid(row=2, column=1)
-        self.specificity.grid(row=2, column=2)
+        self.TPR.grid(row=2, column=1)
+        self.TNR.grid(row=2, column=2)
+        self.FPR.grid(row=2, column=3)
+        self.FNR.grid(row=2, column=4)
+        self.precision.grid(row=2, column=5)
+        self.fmeasure.grid(row=2, column=6)
 
         # Bottom frame
         self.bottom_frame = Frame(self.window)
-        self.progressbar = Progressbar(self.bottom_frame, mode='determinate', length=400)
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.analisys_button = Button(self.bottom_frame, text="Data Analisys", command=self.start_analisys) 
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.classification)
@@ -108,12 +123,11 @@ class ML_Project_GUI:
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
         self.bottom_frame.columnconfigure(0, weight=1)
-        self.progressbar.grid(row=0, column=0, columnspan=5, padx=5, pady=5)
-        self.notify_label.grid(row=1, column=0, padx=5, pady=5)
-        self.analisys_button.grid(row=1, column=1, padx=5, pady=5)
-        self.start_button.grid(row=1, column=2, padx=5, pady=5)
-        self.roc_button.grid(row=1, column=3, padx=5, pady=5)
-        self.close_button.grid(row=1, column=4, padx=5, pady=5)
+        self.notify_label.grid(row=0, column=0, padx=5, pady=5)
+        self.analisys_button.grid(row=0, column=1, padx=5, pady=5)
+        self.start_button.grid(row=0, column=2, padx=5, pady=5)
+        self.roc_button.grid(row=0, column=3, padx=5, pady=5)
+        self.close_button.grid(row=0, column=4, padx=5, pady=5)
 
     def classifier_options(self, event):
         selected_option = self.classifier_combo.get()
@@ -125,7 +139,7 @@ class ML_Project_GUI:
         self.notify_label.config(text="Classifier chosen", foreground="green")
         self.classifier_option_frame.destroy_child()
 
-        if selected_option == 'Ensamble classifier':
+        if selected_option == classifier_tuple[4]:
             self.classifier_option_frame.columnconfigure(tuple(range(3)), weight=1)
 
             # Radiobutton for hard or soft voting
@@ -161,7 +175,7 @@ class ML_Project_GUI:
             self.weight2.grid(row=1, column=1, padx=4)
             self.weight3.grid(row=1, column=2, padx=4)
 
-        elif(selected_option == 'K nearest neighbor'):
+        elif(selected_option == classifier_tuple[1]):
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
             self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
@@ -173,7 +187,7 @@ class ML_Project_GUI:
             self.option_label.grid(row=0, column=0)
             self.option_combobox.grid(row=1, column=0)
 
-        elif(selected_option == 'Decision tree'): 
+        elif(selected_option == classifier_tuple[0]): 
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
             self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
@@ -185,11 +199,11 @@ class ML_Project_GUI:
             self.option_label.grid(row=0, column=0)
             self.option_combobox.grid(row=1, column=0)
 
-        elif(selected_option == 'Support Vector Classifier'):
+        elif(selected_option == classifier_tuple[2]):
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
             self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
-            # Combobox for purity function
+            # Combobox for kernel function
             self.option_label = Label(self.classifier_option_frame, text="Kernel")
             self.option_combobox = Combobox(self.classifier_option_frame, state='readonly')
             self.option_combobox['values'] = kernel_tuple
@@ -208,31 +222,44 @@ class ML_Project_GUI:
             self.weight3.config(state=tk.ACTIVE)
 
     def classification(self):
-        self.progressbar.config(mode='indeterminate')
-        self.progressbar.start()
-
         classifier_params = {}
-        if self.classifier_picked in classifier_tuple[1:3]:
+        if self.classifier_picked == classifier_tuple[0] or self.classifier_picked == classifier_tuple[1] or self.classifier_picked == classifier_tuple[2]:
             classifier_params['option'] = self.option_combobox.get()
 
-        if self.classifier_picked == classifier_tuple[0]:
+        if self.classifier_picked == classifier_tuple[4]:
             if self.weight_var == 0:
-                classifier_params['w'] = [1,1,1]
+                classifier_params['weights'] = [1, 1, 1]
             else:
-                classifier_params['w'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
+                classifier_params['weights'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
             if self.voting_var == "Hard Voting":
                 classifier_params['voting'] = 'hard'
             else:
                 classifier_params['voting'] = 'soft'
 
         X, y = split_attrib_class(self.dataset)
+
+        self.notify_label.config(text='Preprocessing...', foreground='blue')
+        self.window.update_idletasks()
         X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
         train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
-        classifier = classification(self.classifier_picked, train_x, train_y, classifier_params)
+        
+        self.notify_label.config(text='Training...', foreground='blue')
+        self.window.update_idletasks()
+        classifier = training(self.classifier_picked, train_x, train_y, classifier_params)
+
+        self.notify_label.config(text='Predicting...', foreground='blue')
+        self.window.update_idletasks()
         pred_y = classifier.predict(test_x)
-        print(compute_performances(test_y, pred_y))
-        self.progressbar.stop()
-        self.progressbar.config(mode='determinate')
+        acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(test_y, pred_y)
+
+        self.accuracy.config(text=f"{acc}")
+        self.TPR.config(text=f"{TPR}")
+        self.TNR.config(text=f"{TNR}")
+        self.FPR.config(text=f"{FPR}")
+        self.FNR.config(text=f"{FNR}")
+        self.precision.config(text=f"{p}")
+        self.fmeasure.config(text=f"{F1}")
+        self.notify_label.config(text='End classification', foreground='green')
 
     def start_analisys(self):
         start_analisys2(self)

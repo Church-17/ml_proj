@@ -6,15 +6,15 @@ from cursom_Ensamble import Custom_Ensemble
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
-classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes')
+classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Ensamble custom')
 distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
-def classification(classifier_str, train_x, train_y, gui_params):
+def training(classifier_str, train_x, train_y, gui_params):
     params = {}
 
-    if classifier_str == classifier_tuple[1]:
+    if classifier_str == classifier_tuple[0]:
         if gui_params['option'] == purity_tuple[0]:
             params['criterion'] = 'gini'
         elif gui_params['option'] == purity_tuple[1]:
@@ -27,7 +27,7 @@ def classification(classifier_str, train_x, train_y, gui_params):
         params['min_samples_split'] = 10
         classifier = DecisionTreeClassifier(**params)
 
-    elif classifier_str == classifier_tuple[2]:
+    elif classifier_str == classifier_tuple[1]:
         if gui_params['option'] == distance_tuple[0]:
             params['weights'] = 'uniform'
         elif gui_params['option'] == distance_tuple[1]:
@@ -45,24 +45,24 @@ def classification(classifier_str, train_x, train_y, gui_params):
         params['n_neighbors'] = 10
         classifier = KNeighborsClassifier(**params)
 
-    elif classifier_str == classifier_tuple[3]:
+    elif classifier_str == classifier_tuple[2]:
         if gui_params['option'] == kernel_tuple[0]:
             params['kernel'] = 'linear'
         elif gui_params['option'] == kernel_tuple[1]:
             params['kernel'] = 'poly'
         elif gui_params['option'] == kernel_tuple[2]:
             params['kernel'] = 'rbf'
-        params['C'] = 10
-        params['gamma'] = 10
+        params['C'] = 1.0
+        params['gamma'] = 1.0
         classifier = SVC(**params)
 
-    elif classifier_str == classifier_tuple[4]:
+    elif classifier_str == classifier_tuple[3]:
         classifier = CustomNaiveBayes()
-    elif classifier_str == classifier_tuple[0]:
-        params['w'] = gui_params['w']
+
+    elif classifier_str == classifier_tuple[4]:
+        params['weights'] = gui_params['weights']
         params['voting'] = gui_params['voting']
-        classifier = Custom_Ensemble(params)
-        
+        classifier = Custom_Ensemble(**params)
     
     classifier.fit(train_x, train_y)
 
@@ -76,11 +76,11 @@ def compute_performances(test_y, pred_y):
     TN = cm[0,0]
     FP = cm[0,1]
     FN = cm[1,0]
+    acc = (TP + TN) / (TP + TN + FP + FN + eps)
     TPR = TP / (TP + FN + eps)
     TNR = TN / (TN + FP + eps)
     FPR = FP / (TN + FP + eps)
     FNR = FN / (TP + FN + eps)
     p = TP / (TP + FP + eps)
-    r = TPR
-    F1 = 2*r*p / (r+p + eps)
-    return TPR, TNR, FPR, FNR, p, r, F1
+    F1 = 2*TPR*p / (TPR+p + eps)
+    return round(acc, 6), round(TPR, 6), round(TNR, 6), round(FPR, 6), round(FNR, 6), round(p, 6), round(F1, 6)
