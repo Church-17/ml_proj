@@ -5,7 +5,7 @@ def destroy_child(frame:Frame):
     for widget in frame.winfo_children():
         widget.destroy()
 Frame.destroy_child = destroy_child
-
+ 
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
 balancing_tuple = ('No balancing', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN', 'Hybrid SMOTEENN')
 reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature Agglomeration')
