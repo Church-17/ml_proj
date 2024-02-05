@@ -222,4 +222,4 @@ class ML_Project_GUI:
         start_analisys2(self)
 
     def roc_curve(self):
-        draw_roc_curve(self.y_test, self.y_pred_prob)
+        draw_roc_curve(self.test_y, self.pred_prob_y)
