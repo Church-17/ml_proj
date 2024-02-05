@@ -3,6 +3,8 @@ dependencies:
   - python
   - pip
   - tk
+  - numpy
   - scikit-learn
+  - scipy
+  - imbalanced-learn
   - matplotlib
-  - imblearn
