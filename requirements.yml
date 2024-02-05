@@ -4,3 +4,5 @@ dependencies:
   - pip
   - tk
   - scikit-learn
+  - matplotlib
+  - imblearn
