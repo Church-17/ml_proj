@@ -130,6 +130,32 @@ class ML_Project_GUI:
         self.data_frame.columnconfigure((0, 1), weight=1)
         self.data_frame.grid(row=0, column=1, sticky=tk.EW)
 
+        X = self.dataset.iloc[:,:-1]
+        Q1=X.quantile(0.25) # calcolo primo quartile
+        Q3=X.quantile(0.75) # calcolo terzo quartile
+
+        """
+        self.label_general =  Label(self.data_frame, text='Statistiche generali:')
+        self.label_general2 = Label(self.data_frame, text = self.X.describe())
+        self.label_general.grid(row=1, column=0)
+        self.label_general2.grid(row=1, column=1)
+
+        self.label_general3 =  Label(self.data_frame, text='Numero dei valori non nulli per ogni attributo:' )
+        self.label_general4 = Label(self.data_frame, text = self.dataset.info(verbose = True))
+        self.label_general3.grid(row=1, column=0)
+        self.label_general4.grid(row=1, column=1)
+
+        self.label_general5 =  Label(self.data_frame, text='Valori nulli per ogni attributo:' )
+        self.label_general6 = Label(self.data_frame, text = self.X.isnull().any(axis=0))
+        self.label_general5.grid(row=1, column=0)
+        self.label_general6.grid(row=1, column=1)
+
+        self.label_general7 =  Label(self.data_frame, text='Outliers oltre il 90esimo e prima del decimo percentile:' )
+        self.label_general8 = Label(self.data_frame, text = self.dataset.DataFrame(X[(X<X.quantile(0.10)) | (X>X.quantile(0.90))]))
+        self.label_general9.grid(row=1, column=0)
+        self.label_general10.grid(row=1, column=1)
+        """
+
 
 
 
