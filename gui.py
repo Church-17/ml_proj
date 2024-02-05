@@ -197,10 +197,12 @@ class ML_Project_GUI:
             self.weight3.config(state=tk.ACTIVE)
 
     def classification(self):
+        self.progressbar.config(mode='indeterminate')
+        self.progressbar.start()
         classifier_params = {}
         if self.classifier_picked in classifier_tuple[1:3]:
             classifier_params['option'] = self.option_combobox.get()
-        init_classification(self.classifier_picked, self.dataset, classifier_params)
+        classification(self.classifier_picked, self.dataset, classifier_params)
 
     def start_analisys(self):
         self.window2 = tk.Toplevel()

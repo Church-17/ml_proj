@@ -1,12 +1,15 @@
-from sklearn.model_selection import train_test_split, GridSearchCV
+from dataset import split_attrib_class
+from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
+import numpy as np
 
 classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
 distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 
-def init_classification(classifier_str, dataset, gui_params):
+def classification(classifier_str, dataset, gui_params):
     params = {}
 
     if classifier_str == classifier_tuple[1]:
@@ -40,10 +43,27 @@ def init_classification(classifier_str, dataset, gui_params):
         params['n_neighbors'] = 10
         classifier = KNeighborsClassifier(**params)
 
-    X = dataset.data
-    Y = dataset.target
+    X, Y = split_attrib_class(dataset)
     train_x, test_x, train_y, test_y = train_test_split(X, Y, random_state=0, test_size=0.25)
 
     classifier.fit(train_x, train_y)
 
     pred_y = classifier.predict(test_x)
+
+    cm = confusion_matrix(test_y, pred_y)
+    print(compute_performances(cm))
+
+def compute_performances(cm):
+    eps = np.finfo(float).eps
+    TP = cm[1,1]
+    TN = cm[0,0]
+    FP = cm[0,1]
+    FN = cm[1,0]
+    TPR = TP / (TP + FN + eps)
+    TNR = TN / (TN + FP + eps)
+    FPR = FP / (TN + FP + eps)
+    FNR = FN / (TP + FN + eps)
+    p = TP / (TP + FP + eps)
+    r = TPR
+    F1 = 2*r*p / (r+p + eps)
+    return TPR, TNR, FPR, FNR, p, r, F1
