@@ -1,12 +1,13 @@
 from scipy.io import arff
-import pandas as pd
+from pandas import DataFrame
 
+# Function to load dataset
 def load_dataset(path):
-    dataset_raw = arff.loadarff(path)
-    df = pd.DataFrame(dataset_raw[0])
+    dataset_raw = arff.loadarff(path) # Load ARFF file
+    df = DataFrame(dataset_raw[0]) # Convert to Pandas DataFrame
     return df
 
-def split_attrib_class(df: pd.DataFrame):
-    X=df.iloc[:,:-1] 
-    Y=df.iloc[:,-1].to_numpy(dtype=int)[:,]
+def split_attrib_class(df: DataFrame):
+    X=df.iloc[:,:-1] # Retrieve attribute matrix
+    Y=df.iloc[:,-1].to_numpy(dtype=int)[:,] # Retrieve class array
     return X, Y
