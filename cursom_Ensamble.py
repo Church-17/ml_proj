@@ -2,20 +2,32 @@ import sklearn as sl
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-def Custom_Ensemble(self, ds, parametri):
+class Custom_Ensemble:
 
-    def __init__(self):
+    def __init__(self, parametri):
         self.estimators = ['Decision tree', 'K nearest neighbor', 'Support Vector Classifier']
         self.voting = parametri['voting']
         self.w = parametri['w']
         self.fitted = False
-        self.dataset = ds
         
     def fit(self, x, y):
         self.labels = ['0', '1']
+        classifier_params = {}
         for estimator in self.estimators:
             sub_train_x, _, sub_train_y, _ =  train_test_split(x, y, test_size=0.20, stratify=y)
+            if estimator == 'Decision tree':
+                classifier_params['option'] = 'Gini'
+                classification(estimator, x, y, train_y, )
+            elif  estimator == 'K nearest neighbor':
+                classifier_params['option'] = 'Uniform'
+                classification(estimator, x, y, train_y, classifier_params)
+            elif  estimator == 'Support Vector Classifier':
+                classifier_params['option'] = 'Linear'
+                classification(estimator, x, y, train_y, classifier_params)
+
+    
             estimator.fit(sub_train_x, sub_train_y)
+
         self.fitted = True
 
     def predict(self, test_x):

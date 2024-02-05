@@ -58,14 +58,11 @@ def classification(classifier_str, train_x, test_x, train_y, gui_params):
 
     elif classifier_str == classifier_tuple[4]:
         classifier = CustomNaiveBayes()
-    else:
-        if gui_params['option']:
-            params['w'] = gui_params['w']
-            params['voting'] = gui_params['voting']
-            classifier = Custom_Ensemble(**params)
+    elif classifier_str == classifier_tuple[0]:
+        params['w'] = gui_params['w']
+        params['voting'] = gui_params['voting']
+        classifier = Custom_Ensemble(params)
         
-
-
     
     classifier.fit(train_x, train_y)
 

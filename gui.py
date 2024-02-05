@@ -218,14 +218,15 @@ class ML_Project_GUI:
         if self.classifier_picked in classifier_tuple[1:3]:
             classifier_params['option'] = self.option_combobox.get()
 
-
-        if self.weight_var == 0:
-            classifier_params['w'] = [1,1,1]
-            classifier_params['voting'] = 'soft'
-        else:
-            classifier_params['w'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
-            classifier_params['voting'] = 'hard'
-
+        if self.classifier_picked == classifier_tuple[0]:
+            if self.weight_var == 0:
+                classifier_params['w'] = [1,1,1]
+            else:
+                classifier_params['w'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
+            if self.voting_var == "Hard Voting":
+                classifier_params['voting'] = 'hard'
+            else:
+                classifier_params['voting'] = 'soft'
 
         X, y = split_attrib_class(self.dataset)
         # Preprocessing
