@@ -69,7 +69,8 @@ def classification(classifier_str, train_x, test_x, train_y, gui_params):
     pred_y = classifier.predict(test_x)
     return pred_y
 
-def compute_performances(cm):
+def compute_performances(test_y, pred_y):
+    cm = confusion_matrix(test_y, pred_y)
     eps = np.finfo(float).eps
     TP = cm[1,1]
     TN = cm[0,0]
