@@ -67,16 +67,16 @@ class ML_Project_GUI:
         # Classifier frame
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
-        self.classifier_combo = Combobox(self.classifier_frame, width=40, state='readonly')
+        self.classifier_combo = Combobox(self.classifier_frame, state='readonly')
         self.classifier_combo['values'] = classifier_tuple
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_options)
         self.classifier_option_frame = Frame(self.classifier_frame)
         
         self.classifier_frame.grid(row=1, column=0, sticky=tk.N+tk.EW)
-        self.classifier_frame.columnconfigure(0, weight=1)
-        self.classifier_title.grid(row=0, column=0, pady=(20, 7))
-        self.classifier_combo.grid(row=1, column=0)
-        self.classifier_option_frame.grid(row=2, column=0, padx=20, pady=10, sticky=tk.EW)
+        self.classifier_frame.columnconfigure((0, 1, 2), weight=1)
+        self.classifier_title.grid(row=0, column=0, columnspan=3, pady=(20, 7))
+        self.classifier_combo.grid(row=1, column=1, sticky=tk.EW)
+        self.classifier_option_frame.grid(row=2, column=0, columnspan=3, padx=20, pady=10, sticky=tk.EW)
 
         # Result frame
         self.result_frame = Frame(self.window)
