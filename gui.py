@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter.ttk import *
 from dataset import split_attrib_class
 from sklearn.model_selection import train_test_split
+from preprocessing import *
 from classification import *
 from ROC import draw_roc_curve
 from Data_Analisys import start_analisys2
@@ -11,11 +12,6 @@ def destroy_child(frame:Frame):
         widget.destroy()
 Frame.destroy_child = destroy_child
  
-sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
-balancing_tuple = ('No balancing', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN', 'Hybrid SMOTEENN')
-reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature Agglomeration')
-transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
-
 class ML_Project_GUI:
     def __init__(self, dataset):
         self.title:str = "Machine Learning Project"
@@ -214,6 +210,7 @@ class ML_Project_GUI:
     def classification(self):
         self.progressbar.config(mode='indeterminate')
         self.progressbar.start()
+
         classifier_params = {}
         if self.classifier_picked in classifier_tuple[1:3]:
             classifier_params['option'] = self.option_combobox.get()
@@ -229,9 +226,9 @@ class ML_Project_GUI:
                 classifier_params['voting'] = 'soft'
 
         X, y = split_attrib_class(self.dataset)
-        # Preprocessing
+        X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
         train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
-        classification(self.classifier_picked, train_x, test_x, train_y, classifier_params)
+        classification(self.classifier_picked, train_x, train_y, classifier_params)
 
         self.progressbar.stop()
         self.progressbar.config(mode='determinate')
