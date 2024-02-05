@@ -4,6 +4,7 @@ dependencies:
   - pip
   - tk
   - numpy
+  - pandas
   - scikit-learn
   - scipy
   - imbalanced-learn
