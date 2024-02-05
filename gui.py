@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.ttk import *
+from classification import *
 from ROC import draw_roc_curve
 
 def destroy_child(frame:Frame):
@@ -11,9 +12,6 @@ sampling_tuple = ('No sampling', 'Random without replacement', 'Random with repl
 balancing_tuple = ('No balancing', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN', 'Hybrid SMOTEENN')
 reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature Agglomeration')
 transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
-classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
-purity_tuple = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
-distance_tuple = ('Gini', 'Entropy', 'Classification error', 'Tuning')
 
 class ML_Project_GUI:
     def __init__(self, dataset):
@@ -104,8 +102,8 @@ class ML_Project_GUI:
         self.bottom_frame = Frame(self.window)
         self.progressbar = Progressbar(self.bottom_frame, mode='determinate', length=400)
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
-        self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED)
-        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED)
+        self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.start_classification)
+        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.roc_curve)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
@@ -214,8 +212,8 @@ class ML_Project_GUI:
             self.weight2.config(state=tk.ACTIVE)
             self.weight3.config(state=tk.ACTIVE)
 
-    def start_classifier(self):
-        pass
+    def start_classification(self):
+        start_classification(self.classifier_picked)
 
     def roc_curve(self):
         draw_roc_curve(self.y_test, self.y_pred_prob)
