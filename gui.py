@@ -118,7 +118,7 @@ class ML_Project_GUI:
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.analisys_button = Button(self.bottom_frame, text="Data Analisys", command=self.start_analisys) 
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.classification)
-        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.roc_curve)
+        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.ACTIVE, command=self.roc_curve)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
@@ -241,16 +241,17 @@ class ML_Project_GUI:
         self.notify_label.config(text='Preprocessing...', foreground='blue')
         self.window.update_idletasks()
         X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
-        train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
+        self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(X, y, random_state=0, test_size=0.25)
         
         self.notify_label.config(text='Training...', foreground='blue')
         self.window.update_idletasks()
-        classifier = training(self.classifier_picked, train_x, train_y, classifier_params)
+        classifier = training(self.classifier_picked, self.train_x, self.train_y, classifier_params)
 
         self.notify_label.config(text='Predicting...', foreground='blue')
         self.window.update_idletasks()
-        pred_y = classifier.predict(test_x)
-        acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(test_y, pred_y)
+        self.pred_y = classifier.predict(self.test_x)
+        self.pred_prob_y = classifier.predict_proba(self.test_x)
+        acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(self.test_y, self.pred_y)
 
         self.accuracy.config(text=f"{acc}")
         self.TPR.config(text=f"{TPR}")
