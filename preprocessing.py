@@ -40,24 +40,25 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
         X = normalize(X, 'l2')
 
     # Dimensionality
+    new_n_features = 48
     if reduction == reduction_tuple[1]:
         reduct_obj = PCA()
     elif reduction == reduction_tuple[2]:
-        reduct_obj = SparseRandomProjection()
+        reduct_obj = SparseRandomProjection(new_n_features)
     elif reduction == reduction_tuple[3]:
-        reduct_obj = GaussianRandomProjection()
+        reduct_obj = GaussianRandomProjection(new_n_features)
     elif reduction == reduction_tuple[4]:
         reduct_obj = FeatureAgglomeration()
     elif reduction == reduction_tuple[5]:
-        reduct_obj = VarianceThreshold()
+        reduct_obj = VarianceThreshold(1)
     elif reduction == reduction_tuple[6]:
-        reduct_obj = SelectKBest(chi2, k=32)
+        reduct_obj = SelectKBest(chi2, k=new_n_features)
     elif reduction == reduction_tuple[7]:
-        reduct_obj = SelectKBest(mutual_info_classif, k=32)
+        reduct_obj = SelectKBest(mutual_info_classif, k=new_n_features)
     elif reduction == reduction_tuple[8]:
-        reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=32, n_jobs= -1, direction='backward')
+        reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=new_n_features, n_jobs= -1, direction='backward')
     elif reduction == reduction_tuple[9]:
-        reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=32, n_jobs= -1, direction='forward')
+        reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=new_n_features, n_jobs= -1, direction='forward')
     else:
         reduct_obj = None
     if reduct_obj:
