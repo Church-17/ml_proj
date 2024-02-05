@@ -43,8 +43,8 @@ def classification(classifier_str, dataset, gui_params):
         params['n_neighbors'] = 10
         classifier = KNeighborsClassifier(**params)
 
-    X, Y = split_attrib_class(dataset)
-    train_x, test_x, train_y, test_y = train_test_split(X, Y, random_state=0, test_size=0.25)
+    X, y = split_attrib_class(dataset)
+    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
 
     classifier.fit(train_x, train_y)
 
