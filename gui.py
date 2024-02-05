@@ -186,6 +186,18 @@ class ML_Project_GUI:
             self.option_label.grid(row=0, column=0)
             self.option_combobox.grid(row=1, column=0)
 
+        elif(selected_option == 'Support Vector Classifier'):
+            self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
+
+            # Combobox for purity function
+            self.option_label = Label(self.classifier_option_frame, text="Kernel")
+            self.option_combobox = Combobox(self.classifier_option_frame, state='readonly')
+            self.option_combobox['values'] = kernel_tuple
+            self.option_combobox.current(0)
+            self.option_label.grid(row=0, column=0)
+            self.option_combobox.grid(row=1, column=0)
+
     def weight_options(self): # managing weight selection
         if self.weight_var.get() == 0:
             self.weight1.config(state=tk.DISABLED)

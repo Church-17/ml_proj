@@ -2,12 +2,15 @@ from dataset import split_attrib_class
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from custom_Naive_Bayes import CustomNaiveBayes
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
-classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
+classifier_tuple = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes')
 distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
+kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
 def classification(classifier_str, dataset, gui_params):
     params = {}
@@ -42,6 +45,21 @@ def classification(classifier_str, dataset, gui_params):
             params['metric'] = 'correlation'
         params['n_neighbors'] = 10
         classifier = KNeighborsClassifier(**params)
+
+    elif classifier_str == classifier_tuple[3]:
+        if gui_params['option'] == kernel_tuple[0]:
+            params['kernel'] = 'linear'
+        elif gui_params['option'] == kernel_tuple[1]:
+            params['kernel'] = 'poly'
+        elif gui_params['option'] == kernel_tuple[2]:
+            params['kernel'] = 'rbf'
+        params['C'] = 10
+        params['gamma'] = 10
+        classifier = SVC(**params)
+
+    elif classifier_str == classifier_tuple[4]:
+        classifier = CustomNaiveBayes()
+
 
     X, y = split_attrib_class(dataset)
     train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
