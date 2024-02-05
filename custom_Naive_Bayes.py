@@ -16,10 +16,10 @@ class CustomNaiveBayes(object):
         self.pos_variances = np.zeros(self.n_attr)
 
         for i in range(self.n_attr):
-            self.neg_means[i] = np.mean(train_x.iloc[:,i][train_y == 0])
-            self.neg_variances[i] = np.var(train_x.iloc[:,i][train_y == 0])
-            self.pos_means[i] = np.mean(train_x.iloc[:,i][train_y == 1])
-            self.pos_variances[i] = np.var(train_x.iloc[:,i][train_y == 1])
+            self.neg_means[i] = np.mean(train_x[:,i][train_y == 0])
+            self.neg_variances[i] = np.var(train_x[:,i][train_y == 0])
+            self.pos_means[i] = np.mean(train_x[:,i][train_y == 1])
+            self.pos_variances[i] = np.var(train_x[:,i][train_y == 1])
 
 
     def predict(self, test_x):
@@ -29,7 +29,7 @@ class CustomNaiveBayes(object):
         for obj in range(len(test_x)):
             pos_probability = self.prob_pos
             neg_probability = self.prob_neg
-            record = test_x.iloc[obj]
+            record = test_x[obj]
             for attr in range(self.n_attr):
                 neg_probability *= (1/np.sqrt(2*np.pi*self.neg_variances[attr])) * np.exp(-1 * ((record[attr] - self.neg_means[attr])**2 / (2 * self.neg_variances[attr])))
                 pos_probability *= (1/np.sqrt(2*np.pi*self.pos_variances[attr])) * np.exp(-1 * ((record[attr] - self.pos_means[attr])**2 / (2 * self.pos_variances[attr])))
