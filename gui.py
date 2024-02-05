@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.ttk import *
+from ROC import draw_roc_curve
 
 def destroy_child(frame:Frame):
     for widget in frame.winfo_children():
@@ -215,3 +216,6 @@ class ML_Project_GUI:
 
     def start_classifier(self):
         pass
+
+    def roc_curve(self):
+        draw_roc_curve(self.y_test, self.y_pred_prob)
