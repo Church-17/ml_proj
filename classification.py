@@ -2,6 +2,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from custom_Naive_Bayes import CustomNaiveBayes
+from cursom_Ensamble import Custom_Ensemble
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
@@ -57,6 +58,12 @@ def classification(classifier_str, train_x, test_x, train_y, gui_params):
 
     elif classifier_str == classifier_tuple[4]:
         classifier = CustomNaiveBayes()
+    else:
+        if gui_params['option']:
+            params['w'] = gui_params['w']
+            params['voting'] = gui_params['voting']
+            classifier = Custom_Ensemble(**params)
+        
 
 
     
