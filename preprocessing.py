@@ -23,7 +23,10 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
         impute_obj = SimpleImputer(strategy='most_frequent')
     elif imputation == imputation_tuple[2]:
         impute_obj = KNNImputer()
-    X = impute_obj.fit_transform(X)
+    else:
+        impute_obj = None
+    if impute_obj:
+        X = impute_obj.fit_transform(X)
 
     # Transformation
     if transformation == transformation_tuple[1]:
@@ -56,7 +59,10 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
         reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=32, n_jobs= -1, direction='backward')
     elif reduction == reduction_tuple[9]:
         reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=32, n_jobs= -1, direction='forward')
-    X = reduct_obj.fit_transform(X, y)
+    else:
+        reduct_obj = None
+    if reduct_obj:
+        X = reduct_obj.fit_transform(X, y)
     
     # Balancing
     if balancing == balancing_tuple[1]:
@@ -75,7 +81,10 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
         balance_obj = SMOTE()
     elif balancing == balancing_tuple[8]:
         balance_obj = ADASYN()
-    X, y = balance_obj.fit_resample(X, y)
+    else:
+        balance_obj = None
+    if balance_obj:
+        X, y = balance_obj.fit_resample(X, y)
 
     # Sampling
 
