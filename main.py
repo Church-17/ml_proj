@@ -32,10 +32,10 @@ class ML_Project_GUI:
         self.balancing_title = Label(self.preproc_frame, text="Balancing")
         self.reduction_title = Label(self.preproc_frame, text="Dimensionality reduction")
         self.transformation_title = Label(self.preproc_frame, text="Transformation")
-        self.sampling_combo = Combobox(self.preproc_frame)
-        self.balancing_combo = Combobox(self.preproc_frame)
-        self.reduction_combo = Combobox(self.preproc_frame)
-        self.transformation_combo = Combobox(self.preproc_frame)
+        self.sampling_combo = Combobox(self.preproc_frame, state='readonly')
+        self.balancing_combo = Combobox(self.preproc_frame, state='readonly')
+        self.reduction_combo = Combobox(self.preproc_frame, state='readonly')
+        self.transformation_combo = Combobox(self.preproc_frame, state='readonly')
         
         self.preproc_frame.grid(row=0, column=0, sticky=tk.EW)
         self.preproc_frame.columnconfigure((0, 1), weight=1)
@@ -52,7 +52,7 @@ class ML_Project_GUI:
         # Classifier frame
         self.classifier_frame = Frame(self.window)
         self.classifier_title = Label(self.classifier_frame, text="Classifier", font=("Helvetica", 12))
-        self.classifier_combo = Combobox(self.classifier_frame, width=40)
+        self.classifier_combo = Combobox(self.classifier_frame, width=40, state='readonly')
         self.classifier_combo['values'] = ('Ensamble classifier', 'Decision tree', 'K nearest neighbor')
         self.classifier_combo.bind("<<ComboboxSelected>>", self.classifier_options)
         self.classifier_option_frame = Frame(self.classifier_frame)
@@ -158,7 +158,7 @@ class ML_Project_GUI:
 
             # Combobox for distance function
             self.distance_label = Label(self.classifier_option_frame, text="Distance:")
-            self.distance_combobox = Combobox(self.classifier_option_frame)
+            self.distance_combobox = Combobox(self.classifier_option_frame, state='readonly')
             self.distance_combobox['values'] = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
             self.distance_combobox.current(0)
             self.distance_label.grid(row=0, column=1)
@@ -180,7 +180,7 @@ class ML_Project_GUI:
             # Combobox for purity function
             self.purity_frame = Frame(self.classifier_option_frame)
             self.purity_label = Label(self.purity_frame, text="Purity:")
-            self.purity_combobox = Combobox(self.purity_frame)
+            self.purity_combobox = Combobox(self.purity_frame, state='readonly')
             self.purity_combobox['values'] = ('Gini', 'Entropy', 'Classification error', 'Tuning')
             self.purity_combobox.current(0)
             self.purity_frame.grid(row=0, column=1)
