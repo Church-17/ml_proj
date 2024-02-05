@@ -157,13 +157,13 @@ class ML_Project_GUI:
             # Combobox for distance function
             self.distance_label = Label(self.classifier_option_frame, text="Distance:")
             self.distance_spinbox = Combobox(self.classifier_option_frame)
-            self.distance_spinbox['values'] = ('Euclidean', 'Manhattan', 'Chebychev')
+            self.distance_spinbox['values'] = ('Euclidean', 'Manhattan', 'Chebychev', 'Tuning')
             self.distance_label.grid(row=0, column=1)
             self.distance_spinbox.grid(row=1, column=1)
 
         elif(selected_option == 'Decision tree'): 
-            self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(2, 3)), weight=0)
 
             # Radiobutton for pre or post pruning
             self.prune_var = tk.IntVar()
@@ -173,6 +173,15 @@ class ML_Project_GUI:
             self.prune_frame.grid(row=0, column=0)
             self.pre_pruning_rb.grid(row=0, column=0, sticky=tk.W)
             self.post_pruning_rb.grid(row=1, column=0, sticky=tk.W)
+
+            # Combobox for purity function
+            self.purity_frame = Frame(self.classifier_option_frame)
+            self.purity_label = Label(self.purity_frame, text="Purity:")
+            self.purity_spinbox = Combobox(self.purity_frame)
+            self.purity_spinbox['values'] = ('Gini', 'Entropy', 'Classification error', 'Tuning')
+            self.purity_frame.grid(row=0, column=1)
+            self.purity_label.grid(row=0, column=0)
+            self.purity_spinbox.grid(row=1, column=0)
 
     def weight_options(self): # managing weight selection
         if self.weight_var.get() == 0:
