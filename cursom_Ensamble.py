@@ -1,6 +1,7 @@
 import sklearn as sl
 import numpy as np
 from sklearn.model_selection import train_test_split
+from classification2 import classify
 
 class Custom_Ensemble:
 
@@ -14,20 +15,15 @@ class Custom_Ensemble:
         self.labels = ['0', '1']
         classifier_params = {}
         for estimator in self.estimators:
-            sub_train_x, _, sub_train_y, _ =  train_test_split(x, y, test_size=0.20, stratify=y)
             if estimator == 'Decision tree':
                 classifier_params['option'] = 'Gini'
-                classification(estimator, x, y, train_y, )
+                classify(estimator, x, y, classifier_params )
             elif  estimator == 'K nearest neighbor':
                 classifier_params['option'] = 'Uniform'
-                classification(estimator, x, y, train_y, classifier_params)
+                classify(estimator, x, y, classifier_params)
             elif  estimator == 'Support Vector Classifier':
                 classifier_params['option'] = 'Linear'
-                classification(estimator, x, y, train_y, classifier_params)
-
-    
-            estimator.fit(sub_train_x, sub_train_y)
-
+                classify(estimator, x, y,  classifier_params)
         self.fitted = True
 
     def predict(self, test_x):
