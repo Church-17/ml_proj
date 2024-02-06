@@ -8,6 +8,9 @@ from imblearn.under_sampling import RandomUnderSampler, InstanceHardnessThreshol
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
+import numpy as np
+from numpy.random import choice
+from sklearn.model_selection import train_test_split
 
 imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
@@ -87,6 +90,24 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
     if balance_obj:
         X, y = balance_obj.fit_resample(X, y)
 
-    # Sampling
+    sample_dim = (len(y[y == 0]) + len(y[y == 1])) // 2
+    sampled_X = [0] * sample_dim
+    sampled_y = [0] * sample_dim
+    if sampling == sampling_tuple[1]:
+        sampling_obj = choice(len(y), sample_dim)
+        for i in range(sample_dim):
+            sampled_X[i] = X[sampling_obj[i]][:]
+            sampled_y[i] = y[sampling_obj[i]][:]
+    elif sampling == sampling_tuple[2]:
+        sampling_obj = choice(len(y), sample_dim, replace=True)
+        for i in range(sample_dim):
+            sampled_X[i] = X[sampling_obj[i]][:]
+            sampled_y[i] = y[sampling_obj[i]][:]
+    elif sampling == sampling_tuple[3]:
+        train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25, stratify=y)
+        return train_x, test_x, train_y, test_y
+    
 
-    return X, y
+    
+    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25, stratify=y)
+    return train_x, test_x, train_y, test_y
