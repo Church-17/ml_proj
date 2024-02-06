@@ -211,7 +211,7 @@ class ML_Project_GUI:
 
         elif(selected_option == classifier_tuple[1]):
             self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(2, 3)), weight=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(2, 4)), weight=0)
 
             # Combobox for distance function
             self.distance_frame = Frame(self.classifier_option_frame)
@@ -234,7 +234,7 @@ class ML_Project_GUI:
 
         elif(selected_option == classifier_tuple[0]): 
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 4)), weight=0)
 
             # Combobox for purity function
             self.option_label = Label(self.classifier_option_frame, text="Purity:")
@@ -246,7 +246,7 @@ class ML_Project_GUI:
 
         elif(selected_option == classifier_tuple[2]):
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(1, 4)), weight=0)
 
             # Combobox for kernel function
             self.option_label = Label(self.classifier_option_frame, text="Kernel")
