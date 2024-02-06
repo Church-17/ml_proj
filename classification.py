@@ -58,9 +58,9 @@ def init_classification(classifier_str, gui_params):
     elif classifier_str == classifier_tuple[2]:
         classifier = SVC(probability=True)
         if gui_params['tuning']:
-            params['kernel'] = ['rbf']
-            params['C'] = tuple([float(x)/10 for x in range(1, 20)])
-            params['gamma'] = tuple([float(x)/10 for x in range(1, 20)])
+            params['kernel'] = ['linear', 'poly', 'rbf']
+            params['C'] = tuple([float(x)/10 for x in range(10, 30)])
+            params['gamma'] = tuple([float(x)/10 for x in range(0, 10)])
         else:
             if gui_params['option1'] == kernel_tuple[0]:
                 params['kernel'] = 'linear'
@@ -68,8 +68,8 @@ def init_classification(classifier_str, gui_params):
                 params['kernel'] = 'poly'
             elif gui_params['option1'] == kernel_tuple[2]:
                 params['kernel'] = 'rbf'
-            params['C'] = 1.0
-            params['gamma'] = 1.0
+            params['C'] = 1.5
+            params['gamma'] = 0.5
 
     elif classifier_str == classifier_tuple[3]:
         classifier = CustomNaiveBayes()
