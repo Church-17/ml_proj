@@ -60,13 +60,12 @@ def training(classifier_str, train_x, train_y, gui_params):
         classifier = CustomNaiveBayes()
 
     elif classifier_str == classifier_tuple[4]:
-        params['weights'] = gui_params['weights']
-        params['voting'] = gui_params['voting']
-        classifier = Custom_Ensemble(**params)
+        w = gui_params['weights']
+        voting = gui_params['voting']
+        classifier = Custom_Ensemble(w, voting)
     
     classifier.fit(train_x, train_y)
 
-    #pred_y = classifier.predict(test_x)
     return classifier
 
 def compute_performances(test_y, pred_y):
