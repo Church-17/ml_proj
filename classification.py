@@ -8,7 +8,8 @@ from sklearn.metrics import confusion_matrix
 import numpy as np
 
 classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Ensamble custom')
-distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
+weights_tuple = ('Uniform', 'Distance')
+distance_tuple = ('Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
@@ -18,52 +19,48 @@ def init_classification(classifier_str, gui_params):
     if classifier_str == classifier_tuple[0]:
         classifier = DecisionTreeClassifier()
         if gui_params['tuning']:
-            params['criterion'] = ('gini', 'entropy')
-            params['max_depth'] = tuple(range(2, 30, 2))
-            params['max_features'] = ('sqrt', 'log2')
-            params['min_samples_leaf'] = tuple(range(1, 15))
-            params['min_samples_split'] = tuple(range(2, 15))
+            params['criterion'] = ('gini', 'entropy', 'log_loss')
+            params['max_depth'] = [None] + list(range(2, 8))
+            params['min_samples_leaf'] = tuple(range(1, 5))
+            params['min_samples_split'] = tuple(range(2, 5))
         else:
-            if gui_params['option'] == purity_tuple[0]:
+            if gui_params['option1'] == purity_tuple[0]:
                 params['criterion'] = 'gini'
-            elif gui_params['option'] == purity_tuple[1]:
+            elif gui_params['option1'] == purity_tuple[1]:
                 params['criterion'] = 'entropy'
-            elif gui_params['option'] == purity_tuple[2]:
+            elif gui_params['option1'] == purity_tuple[2]:
                 params['criterion'] = 'log_loss'
-            params['max_depth'] = None
-            params['max_features'] = "sqrt"
-            params['min_samples_leaf'] = 10
-            params['min_samples_split'] = 10
+            params['max_depth'] = 6
+            params['min_samples_leaf'] = 3
+            params['min_samples_split'] = 2
 
     elif classifier_str == classifier_tuple[1]:
-        if gui_params['option'] == distance_tuple[0]:
-            params['weights'] = 'uniform'
-        elif gui_params['option'] == distance_tuple[1]:
-            params['weights'] = 'distance'
-            params['metric'] = 'euclidean'
-        elif gui_params['option'] == distance_tuple[2]:
-            params['weights'] = 'distance'
-            params['metric'] = 'manhattan'
-        elif gui_params['option'] == distance_tuple[3]:
-            params['weights'] = 'distance'
-            params['metric'] = 'cosine'
-        elif gui_params['option'] == distance_tuple[4]:
-            params['weights'] = 'distance'
-            params['metric'] = 'correlation'
-
         classifier = KNeighborsClassifier()
-
         if gui_params['tuning']:
-            params['n_neighbors'] = tuple(range(1, 50))
+            params['n_neighbors'] = tuple(range(1, 10))
+            params['weights'] = ('uniform','distance')
+            params['metric'] = ('euclidean', 'manhattan', 'cosine', 'correlation')
         else:
+            if gui_params['option1'] == distance_tuple[0]:
+                params['metric'] = 'euclidean'
+            elif gui_params['option1'] == distance_tuple[1]:
+                params['metric'] = 'manhattan'
+            elif gui_params['option1'] == distance_tuple[2]:
+                params['metric'] = 'cosine'
+            elif gui_params['option1'] == distance_tuple[3]:
+                params['metric'] = 'correlation'
+            if gui_params['option2'] == 0:
+                params['weights'] = 'uniform'
+            elif gui_params['option2'] == 1:
+                params['weights'] = 'distance'
             params['n_neighbors'] = 10
 
     elif classifier_str == classifier_tuple[2]:
-        if gui_params['option'] == kernel_tuple[0]:
+        if gui_params['option1'] == kernel_tuple[0]:
             params['kernel'] = 'linear'
-        elif gui_params['option'] == kernel_tuple[1]:
+        elif gui_params['option1'] == kernel_tuple[1]:
             params['kernel'] = 'poly'
-        elif gui_params['option'] == kernel_tuple[2]:
+        elif gui_params['option1'] == kernel_tuple[2]:
             params['kernel'] = 'rbf'
 
         classifier = SVC()
