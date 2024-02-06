@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from preprocessing import *
 from classification import *
 from ROC import ROC_Curve
-from Data_Analisys import start_analisys2
+from Data_Analisys import data_analisys
 
 def destroy_child(frame:Frame):
     for widget in frame.winfo_children():
@@ -295,7 +295,7 @@ class ML_Project_GUI:
         self.roc_button.config(state=tk.ACTIVE)
 
     def start_analisys(self):
-        start_analisys2(self)
+        data_analisys(self)
 
     def plot_roc_curve(self):
         self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y)
