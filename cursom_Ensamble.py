@@ -8,34 +8,58 @@ from sklearn.utils import resample
 
 class Custom_Ensemble:
     def __init__(self):
-        self.kNN_clf = KNeighborsClassifier(n_neighbors=5)
-        self.dTree_clf = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
-        self.gNB_clf = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)
+        pass
 
 
-    def set_params (self, weights, voting, algorithm):      
+
+
+    def set_params (self, weights, voting, algorithm): 
+
+        self.algorithm = algorithm
+        if self.algorithm == 'forest':
+            self.kNN_clf = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+            self.dTree_clf = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+            self.gNB_clf = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+        else:    
+            self.kNN_clf = KNeighborsClassifier(n_neighbors=5)
+            self.dTree_clf = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+            self.gNB_clf = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)     
         self.voting = voting
         self.w = np.array(weights).astype(int)
         self.labels = [0, 1]
         self.wsum =  self.w.sum()
-        self.bagging = algorithm
         
 
     def fit(self, x, y):
-        if self.bagging == 'bagging':
+        if self.algorithm == 'bagging':
             x1 = []
             y1 = []
-            for i in range(3):
+            for _ in range(3):
                 xi, yi = resample(x, y)
                 x1.append(xi)
                 y1.append(yi)
             self.kNN_clf.fit(x1[0], y1[0])
             self.dTree_clf.fit(x1[1], y1[1])
             self.gNB_clf.fit(x1[2], y1[2])
-        else:
+
+        elif self.algorithm == 'standard':
             self.kNN_clf.fit(x, y)
             self.dTree_clf.fit(x, y)
             self.gNB_clf.fit(x, y)
+            
+        elif self.algorithm == 'forest':
+            print("forest")
+            self.kNN_clf.fit(x, y)
+            self.dTree_clf.fit(x, y)
+            self.gNB_clf.fit(x, y)
+
+        elif self.algorithm == 'boosting':
+            print("boosting")
+            self.kNN_clf.fit(x, y)
+            self.dTree_clf.fit(x, y)
+            self.gNB_clf.fit(x, y)
+            
+
         self.fitted = True
 
 
