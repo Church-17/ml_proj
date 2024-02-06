@@ -10,7 +10,7 @@ class Custom_Ensemble:
     def __init__(self):
         self.kNN_clf = KNeighborsClassifier(n_neighbors=5)
         self.dTree_clf = DecisionTreeClassifier(max_depth=10, max_features=5, random_state=0)
-        self.gNB_clf = SVC(probability=True, kernel='rbf', C=1.0)
+        self.gNB_clf = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)
 
 
     def set_params (self, weights, voting):      
