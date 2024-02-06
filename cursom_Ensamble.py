@@ -2,6 +2,9 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
+from sklearn.utils import resample
+
+
 
 class Custom_Ensemble:
     def __init__(self):
@@ -10,20 +13,29 @@ class Custom_Ensemble:
         self.gNB_clf = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)
 
 
-    def set_params (self, weights, voting):      
+    def set_params (self, weights, voting, bagging):      
         self.voting = voting
         self.w = np.array(weights).astype(int)
         self.labels = [0, 1]
         self.wsum =  self.w.sum()
+        self.bagging = bagging
         
 
     def fit(self, x, y):
-        
-
-        self.kNN_clf.fit(x,y)
-        self.dTree_clf.fit(x,y)
-        self.gNB_clf.fit(x,y)
+        if self.bagging == True:
+            x=[]
+            y=[]
+            for i in range(3):
+                x[i], y[i] = resample(x, y)
+            self.kNN_clf.fit(x[i],y[i])
+            self.dTree_clf.fit(x[i],y[i])
+            self.gNB_clf.fit(x[i],y[i])
+        else:
+            self.kNN_clf.fit(x,y)
+            self.dTree_clf.fit(x,y)
+            self.gNB_clf.fit(x,y)
         self.fitted = True
+
 
     def predict(self, test_x):
         proba = []
