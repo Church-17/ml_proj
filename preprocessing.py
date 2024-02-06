@@ -67,27 +67,37 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
         X = reduct_obj.fit_transform(X, y)
     
     # Balancing
+    if oversampling == oversampling_tuple[0]:
+        under_ratio = 'auto'
+    else:
+        under_ratio = 2 * len(y[y==1]) / len(y)
+    
     if undersampling == undersampling_tuple[1]:
-        balance_obj = RandomUnderSampler()
+        balance_obj = RandomUnderSampler(sampling_strategy=under_ratio)
     elif undersampling == undersampling_tuple[2]:
-        balance_obj = InstanceHardnessThreshold()
+        balance_obj = InstanceHardnessThreshold(sampling_strategy=under_ratio)
     elif undersampling == undersampling_tuple[3]:
-        balance_obj = NearMiss(version=1)
+        balance_obj = NearMiss(sampling_strategy=under_ratio, version=1)
     elif undersampling == undersampling_tuple[4]:
-        balance_obj = NearMiss(version=2)
+        balance_obj = NearMiss(sampling_strategy=under_ratio, version=2)
     elif undersampling == undersampling_tuple[5]:
-        balance_obj = ClusterCentroids(estimator=KMeans(n_init='auto'))
+        balance_obj = ClusterCentroids(sampling_strategy=under_ratio, estimator=KMeans(n_init='auto'))
     else:
         balance_obj = None
     if balance_obj:
         X, y = balance_obj.fit_resample(X, y)
 
+    if undersampling == undersampling_tuple[0]:
+        over_ratio = 'auto'
+    else:
+        over_ratio = 1
+
     if oversampling == oversampling_tuple[1]:
-        balance_obj = RandomOverSampler()
+        balance_obj = RandomOverSampler(sampling_strategy=over_ratio)
     elif oversampling == oversampling_tuple[2]:
-        balance_obj = SMOTE()
+        balance_obj = SMOTE(sampling_strategy=over_ratio)
     elif oversampling == oversampling_tuple[3]:
-        balance_obj = ADASYN()
+        balance_obj = ADASYN(sampling_strategy=over_ratio)
     else:
         balance_obj = None
     if balance_obj:
