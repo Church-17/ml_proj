@@ -11,11 +11,12 @@ from sklearn.cluster import KMeans
 
 imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
-balancing_tuple = ('No balancing', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN')
+undersampling_tuple = ('No undersampling', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid')
+oversampling_tuple = ('No oversampling', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN')
 reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature agglomeration', 'Variance threshold', 'Best chi2 score', 'Best mutual info score', 'Backword selection', 'Forward selection')
 transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
 
-def pre_processing(X, y, imputation, transformation, reduction, balancing, sampling):
+def pre_processing(X, y, imputation, transformation, reduction, undersampling, oversampling, sampling):
     # Handle missing values
     if imputation == imputation_tuple[0]:
         impute_obj = SimpleImputer(strategy='mean')
@@ -66,21 +67,26 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
         X = reduct_obj.fit_transform(X, y)
     
     # Balancing
-    if balancing == balancing_tuple[1]:
+    if undersampling == undersampling_tuple[1]:
         balance_obj = RandomUnderSampler()
-    elif balancing == balancing_tuple[2]:
+    elif undersampling == undersampling_tuple[2]:
         balance_obj = InstanceHardnessThreshold()
-    elif balancing == balancing_tuple[3]:
+    elif undersampling == undersampling_tuple[3]:
         balance_obj = NearMiss(version=1)
-    elif balancing == balancing_tuple[4]:
+    elif undersampling == undersampling_tuple[4]:
         balance_obj = NearMiss(version=2)
-    elif balancing == balancing_tuple[5]:
+    elif undersampling == undersampling_tuple[5]:
         balance_obj = ClusterCentroids(estimator=KMeans(n_init='auto'))
-    elif balancing == balancing_tuple[6]:
+    else:
+        balance_obj = None
+    if balance_obj:
+        X, y = balance_obj.fit_resample(X, y)
+
+    if oversampling == oversampling_tuple[1]:
         balance_obj = RandomOverSampler()
-    elif balancing == balancing_tuple[7]:
+    elif oversampling == oversampling_tuple[2]:
         balance_obj = SMOTE()
-    elif balancing == balancing_tuple[8]:
+    elif oversampling == oversampling_tuple[3]:
         balance_obj = ADASYN()
     else:
         balance_obj = None
