@@ -168,7 +168,7 @@ class ML_Project_GUI:
             self.voting_frame = Frame(self.classifier_option_frame)
             self.hardvoting_rb = Radiobutton(self.voting_frame, text="Hard voting", variable=self.voting_var, value=0)
             self.softvoting_rb = Radiobutton(self.voting_frame, text="Soft voting", variable=self.voting_var, value=1)
-            self.voting_frame.grid(row=0, column=0)
+            self.voting_frame.grid(row=0, column=1)
             self.hardvoting_rb.grid(row=0, column=0, sticky=tk.W)
             self.softvoting_rb.grid(row=1, column=0, sticky=tk.W)
 
@@ -177,7 +177,7 @@ class ML_Project_GUI:
             self.weight_frame = Frame(self.classifier_option_frame)
             self.unweighted_rb = Radiobutton(self.weight_frame, text="Non weighted", variable=self.weight_var, value=0, command=self.weight_options)
             self.weighted_rb = Radiobutton(self.weight_frame, text="Weighted", variable=self.weight_var, value=1, command=self.weight_options)
-            self.weight_frame.grid(row=0, column=1)
+            self.weight_frame.grid(row=0, column=2)
             self.unweighted_rb.grid(row=0, column=0, sticky=tk.W)
             self.weighted_rb.grid(row=1, column=0, sticky=tk.W)
 
@@ -186,7 +186,7 @@ class ML_Project_GUI:
             self.ensembling_frame = Frame(self.classifier_option_frame)
             self.standard_rb = Radiobutton(self.ensembling_frame, text="Standard", variable=self.ensembling_var, value=0)
             self.bagging_rb = Radiobutton(self.ensembling_frame, text="Bagging", variable=self.ensembling_var, value=1)
-            self.ensembling_frame.grid(row=0, column=1)
+            self.ensembling_frame.grid(row=0, column=0)
             self.standard_rb.grid(row=0, column=0, sticky=tk.W)
             self.bagging_rb.grid(row=1, column=0, sticky=tk.W)
 
@@ -199,7 +199,7 @@ class ML_Project_GUI:
             self.weight1.set(1)
             self.weight2.set(1)
             self.weight3.set(1)
-            self.weights_frame.grid(row=0, column=2)
+            self.weights_frame.grid(row=0, column=3)
             self.weights_label.grid(row=0, column=0, columnspan=3)
             self.weight1.grid(row=1, column=0, padx=4)
             self.weight2.grid(row=1, column=1, padx=4)
