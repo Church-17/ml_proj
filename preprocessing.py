@@ -98,16 +98,25 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
         for i in range(sample_dim):
             sampled_X[i] = X[sampling_obj[i]][:]
             sampled_y[i] = y[sampling_obj[i]][:]
+
     elif sampling == sampling_tuple[2]:
         sampling_obj = choice(len(y), sample_dim, replace=True)
         for i in range(sample_dim):
             sampled_X[i] = X[sampling_obj[i]][:]
             sampled_y[i] = y[sampling_obj[i]][:]
+        X = sampled_X
+        y = sampled_y
+
     elif sampling == sampling_tuple[3]:
         train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25, stratify=y)
         return train_x, test_x, train_y, test_y
     
-
+    elif sampling == sampling_tuple[4]:
+        sampling_obj_neg = choice(len(y[y == 0]), np.ceil((len(y[y == 0]) / len(y)) * sample_dim))
+        sampling_obj_pos = choice(len(y[y == 1]), len(y) - np.ceil((len(y[y == 0]) / len(y)) * sample_dim))
+    
+        X = X[y in sampling_obj_neg or y in sampling_obj_pos]
+        y = y[y in sampling_obj_neg or y in sampling_obj_pos]
     
     train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25, stratify=y)
     return train_x, test_x, train_y, test_y
