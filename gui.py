@@ -31,6 +31,14 @@ class ML_Project_GUI:
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)
 
+        # Menù
+        self.menu_bar = tk.Menu(self.window)
+        self.options_menu = tk.Menu(self.menu_bar, tearoff=False)
+        self.do_tuning = tk.IntVar()
+        self.options_menu.add_checkbutton(label="Tuning", onvalue=1, offvalue=0, variable=self.do_tuning)
+        self.menu_bar.add_cascade(label="Options", menu=self.options_menu)
+        self.window.config(menu=self.menu_bar)
+
         # Preprocessing frame
         self.preproc_frame = Frame(self.window)
         self.preproc_title = Label(self.preproc_frame, text="Data preprocessing", font=("Helvetica", 12))
@@ -118,7 +126,7 @@ class ML_Project_GUI:
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.analisys_button = Button(self.bottom_frame, text="Data Analisys", command=self.start_analisys) 
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.classification)
-        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.ACTIVE, command=self.roc_curve)
+        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.roc_curve)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
@@ -223,10 +231,10 @@ class ML_Project_GUI:
 
     def classification(self):
         classifier_params = {}
+        classifier_params["tuning"] = self.do_tuning.get()
         if self.classifier_picked == classifier_tuple[0] or self.classifier_picked == classifier_tuple[1] or self.classifier_picked == classifier_tuple[2]:
             classifier_params['option'] = self.option_combobox.get()
-
-        if self.classifier_picked == classifier_tuple[4]:
+        elif self.classifier_picked == classifier_tuple[4]:
             if self.weight_var == 0:
                 classifier_params['weights'] = [1, 1, 1]
             else:
@@ -261,6 +269,7 @@ class ML_Project_GUI:
         self.precision.config(text=f"{p}")
         self.fmeasure.config(text=f"{F1}")
         self.notify_label.config(text='End classification', foreground='green')
+        self.roc_button.config(state=tk.ACTIVE)
 
     def start_analisys(self):
         start_analisys2(self)
