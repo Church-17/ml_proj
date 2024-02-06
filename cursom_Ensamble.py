@@ -10,9 +10,6 @@ class Custom_Ensemble:
     def __init__(self):
         pass
 
-
-
-
     def set_params (self, weights, voting, algorithm): 
 
         self.algorithm = algorithm
@@ -48,18 +45,39 @@ class Custom_Ensemble:
             self.gNB_clf.fit(x, y)
             
         elif self.algorithm == 'forest':
-            print("forest")
-            self.kNN_clf.fit(x, y)
-            self.dTree_clf.fit(x, y)
-            self.gNB_clf.fit(x, y)
+            x1 = []
+            y1 = []
+            for _ in range(3):
+                xi, yi = resample(x, y)
+                xi_subset = random_feature_selector(xi, 0.5) 
+                x1.append(xi_subset)
+                y1.append(yi)
+            self.kNN_clf.fit(x1[0], y1[0])
+            self.dTree_clf.fit(x1[1], y1[1])
+            self.gNB_clf.fit(x1[2], y1[2])
 
         elif self.algorithm == 'boosting':
-            print("boosting")
-            self.kNN_clf.fit(x, y)
-            self.dTree_clf.fit(x, y)
-            self.gNB_clf.fit(x, y)
-            
 
+        # Inizializza i pesi del campione
+            sample_weights = np.full(x.shape[0], (1. / x.shape[0]))
+
+        # Addestra ciascun classificatore in sequenza
+            for clf in [self.kNN_clf, self.dTree_clf, self.gNB_clf]:
+                # Addestra il classificatore con i pesi del campione correnti
+                clf.fit(x, y, sample_weight=sample_weights)
+
+                # Calcola l'errore ponderato
+                y_pred = clf.predict(x)
+                incorrect = (y_pred != y)
+                error = np.mean(np.average(incorrect, weights=sample_weights, axis=0))
+
+                # Calcola il peso del classificatore
+                clf_weight = np.log((1. - error) / error) + np.log(2.)
+
+                # Aggiorna i pesi del campione
+                sample_weights *= np.exp(clf_weight * incorrect * ((sample_weights > 0) | (clf_weight > 0)))
+                sample_weights /= np.sum(sample_weights)
+                
         self.fitted = True
 
 
@@ -112,3 +130,9 @@ class Custom_Ensemble:
             pred_y[i][1] = voting[i][1]
             
         return pred_y
+    
+
+def random_feature_selector(X, feature_ratio):
+    n_features = int(X.shape[1] * feature_ratio)
+    cols = np.random.choice(X.shape[1], size=n_features, replace=False)
+    return X[:, cols]
