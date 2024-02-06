@@ -186,9 +186,13 @@ class ML_Project_GUI:
             self.ensembling_frame = Frame(self.classifier_option_frame)
             self.standard_rb = Radiobutton(self.ensembling_frame, text="Standard", variable=self.ensembling_var, value=0)
             self.bagging_rb = Radiobutton(self.ensembling_frame, text="Bagging", variable=self.ensembling_var, value=1)
+            self.boosting_rb = Radiobutton(self.ensembling_frame, text="Boosting", variable=self.ensembling_var, value=2)
+            self.forest_rb = Radiobutton(self.ensembling_frame, text="Random Forest", variable=self.ensembling_var, value=3)
             self.ensembling_frame.grid(row=0, column=0)
             self.standard_rb.grid(row=0, column=0, sticky=tk.W)
             self.bagging_rb.grid(row=1, column=0, sticky=tk.W)
+            self.boosting_rb.grid(row=2, column=0, sticky=tk.W)
+            self.forest_rb.grid(row=3, column=0, sticky=tk.W)
 
             # Spinbox for weights
             self.weights_frame = Frame(self.classifier_option_frame)
@@ -281,8 +285,12 @@ class ML_Project_GUI:
                 gui_params['voting'] = 'soft'
             if self.ensembling_var.get() == 0:
                 gui_params['algorithm'] = 'standard'
-            else:
+            elif self.ensembling_var.get() == 1:
                 gui_params['algorithm'] = 'bagging'
+            elif self.ensembling_var.get() == 2:
+                gui_params['algorithm'] = 'boosting'
+            elif self.ensembling_var.get() == 3:
+                gui_params['algorithm'] = 'forest'
 
         X, y = split_attrib_class(self.dataset)
 
