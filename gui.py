@@ -27,7 +27,7 @@ class ML_Project_GUI:
         self.window.focus_force()
         self.window.geometry("500x450")
         self.window.minsize(500, 450)
-        self.window.iconbitmap("icon.ico")
+        self.window.iconbitmap("growth.ico")
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)
 
