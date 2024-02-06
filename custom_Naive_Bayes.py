@@ -48,7 +48,6 @@ class CustomNaiveBayes(object):
                 sum = np.finfo(float).eps
             self.probabilities[obj][0] /= sum
             self.probabilities[obj][1] /= sum
-            print(self.probabilities[obj])
         
         return self.probabilities
 
