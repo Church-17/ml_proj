@@ -268,6 +268,8 @@ class ML_Project_GUI:
         
         classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
 
+        
+
         if gui_params['tuning'] and self.classifier_picked != classifier_tuple[3] and self.classifier_picked != classifier_tuple[4]:
             self.notify_label.config(text='Tuning...', foreground='blue')
             self.window.update()
@@ -276,7 +278,13 @@ class ML_Project_GUI:
         self.notify_label.config(text='Training...', foreground='blue')
         self.window.update()
         classifier.set_params(**classifier_params)
-        classifier.fit(self.train_x, self.train_y)
+
+        if self.classifier_picked == 'Ensamble custom': #AGGIUNGER CONDIZIONE DI BAGGING O NO DALLA UI
+            classifier.fit(self.dataset)
+        else:
+            classifier.fit(self.train_x, self.train_y)
+
+
 
         self.notify_label.config(text='Predicting...', foreground='blue')
         self.window.update()

@@ -18,6 +18,8 @@ class Custom_Ensemble:
         
 
     def fit(self, x, y):
+        
+
         self.kNN_clf.fit(x,y)
         self.dTree_clf.fit(x,y)
         self.gNB_clf.fit(x,y)
