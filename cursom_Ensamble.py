@@ -32,8 +32,8 @@ class Custom_Ensemble:
         proba.append(self.dTree_clf.predict_proba(test_x))
         proba.append(self.gNB_clf.predict_proba(test_x))
 
-        pred_y = []
-        voting = np.zeros([len(test_x), 2])
+        pred_y = np.zeros([len(test_x),1])
+        voting = np.zeros([len(test_x),2])
 
 
 
@@ -49,7 +49,7 @@ class Custom_Ensemble:
                     voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))
 
                     
-            pred_y.append(self.labels[np.argmax(voting[i][:])])
+            pred_y[i] = (self.labels[np.argmax(voting[i][:])])
 
         print(self.voting, ": ")
         for i in range(0,10):
@@ -63,12 +63,16 @@ class Custom_Ensemble:
         proba.append(self.dTree_clf.predict_proba(test_x))
         proba.append(self.gNB_clf.predict_proba(test_x))
 
-        pred_y = []
+        pred_y = np.zeros([len(test_x),2])
+
         voting = np.zeros([len(test_x), 2])
 
         for i in range(0, len(test_x)):
             for j in range(0,3):
                 voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]/ self.wsum))
-                voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))       
-            pred_y.append([voting[i][0],voting[i][1]])
+                voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))  
+            pred_y[i][0] = voting[i][0]
+            pred_y[i][1] = voting[i][1]
+           #pred_y.append([voting[i][0],voting[i][1]])
+            
         return pred_y
