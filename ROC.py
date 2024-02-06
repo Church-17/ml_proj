@@ -11,6 +11,6 @@ class ROC_Curve(object):
         auc = roc_auc_score(test_y, pred_prob_y[:,1])
         plt.title("ROC Curve")
         plt.plot(fpr, tpr)
-        plt.annotate(str(self.ann), (0.8, 0.2))
+        plt.annotate(str(self.ann)[20:30], (0.8, 0), color='white')
         self.ann = plt.annotate("AUC: %.3f" % auc, (0.8, 0))
         plt.show()
