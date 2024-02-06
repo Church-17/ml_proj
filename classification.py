@@ -3,6 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from custom_Naive_Bayes import CustomNaiveBayes
 from cursom_Ensamble import Custom_Ensemble
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
@@ -21,11 +22,19 @@ def training(classifier_str, train_x, train_y, gui_params):
             params['criterion'] = 'entropy'
         elif gui_params['option'] == purity_tuple[2]:
             params['criterion'] = 'log_loss'
-        params['max_depth'] = None
-        params['max_features'] = "sqrt"
-        params['min_samples_leaf'] = 10
-        params['min_samples_split'] = 10
-        classifier = DecisionTreeClassifier(**params)
+
+        classifier = DecisionTreeClassifier()
+
+        if gui_params['tuning']:
+            params['max_depth'] = None + tuple(range(2, 30))
+            params['max_features'] = ('sqrt', 'log2')
+            params['min_samples_leaf'] = tuple(range(1, 15))
+            params['min_samples_split'] = tuple(range(2, 15))
+        else:
+            params['max_depth'] = None
+            params['max_features'] = "sqrt"
+            params['min_samples_leaf'] = 10
+            params['min_samples_split'] = 10
 
     elif classifier_str == classifier_tuple[1]:
         if gui_params['option'] == distance_tuple[0]:
@@ -42,8 +51,13 @@ def training(classifier_str, train_x, train_y, gui_params):
         elif gui_params['option'] == distance_tuple[4]:
             params['weights'] = 'distance'
             params['metric'] = 'correlation'
-        params['n_neighbors'] = 10
-        classifier = KNeighborsClassifier(**params)
+
+        classifier = KNeighborsClassifier()
+
+        if gui_params['tuning']:
+            params['n_neighbors'] = tuple(range(1, 50))
+        else:
+            params['n_neighbors'] = 10
 
     elif classifier_str == classifier_tuple[2]:
         if gui_params['option'] == kernel_tuple[0]:
@@ -52,19 +66,33 @@ def training(classifier_str, train_x, train_y, gui_params):
             params['kernel'] = 'poly'
         elif gui_params['option'] == kernel_tuple[2]:
             params['kernel'] = 'rbf'
-        params['C'] = 1.0
-        params['gamma'] = 1.0
-        classifier = SVC(**params)
+
+        classifier = SVC()
+        
+        if gui_params['tuning']:
+            params['C'] = tuple(range(0.1, 10, 0.1))
+            params['gamma'] = tuple(range(0.1, 10, 0.1))
+        else:
+            params['C'] = 1.0
+            params['gamma'] = 1.0
 
     elif classifier_str == classifier_tuple[3]:
         classifier = CustomNaiveBayes()
 
     elif classifier_str == classifier_tuple[4]:
-        w = gui_params['weights']
-        voting = gui_params['voting']
-        classifier = Custom_Ensemble(w, voting)
+        params['voting'] = gui_params['voting']
+        params['weights'] = gui_params['weights']
+        classifier = Custom_Ensemble()
     
-    classifier.fit(train_x, train_y)
+    # Tuning
+    if gui_params['tuning'] and classifier_str != classifier_tuple[3] and classifier_str != classifier_tuple[4]:
+        tuner = GridSearchCV(classifier, params, cv=10, n_jobs=-1)
+        tuner.fit(train_x, train_y)
+        params = tuner.best_params_
+        print(params)
+
+    classifier.set_params(**params) # Set params tuned previously or at runtime
+    classifier.fit(train_x, train_y) # Train
 
     return classifier
 
