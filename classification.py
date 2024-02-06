@@ -12,25 +12,24 @@ distance_tuple = ('Uniform', 'Euclidean', 'Manhattan', 'Cosine', 'Pearson correl
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
-def training(classifier_str, train_x, train_y, gui_params):
+def init_classification(classifier_str, gui_params):
     params = {}
 
     if classifier_str == classifier_tuple[0]:
-        if gui_params['option'] == purity_tuple[0]:
-            params['criterion'] = 'gini'
-        elif gui_params['option'] == purity_tuple[1]:
-            params['criterion'] = 'entropy'
-        elif gui_params['option'] == purity_tuple[2]:
-            params['criterion'] = 'log_loss'
-
         classifier = DecisionTreeClassifier()
-
         if gui_params['tuning']:
-            params['max_depth'] = None + tuple(range(2, 30))
+            params['criterion'] = ('gini', 'entropy')
+            params['max_depth'] = tuple(range(2, 30, 2))
             params['max_features'] = ('sqrt', 'log2')
             params['min_samples_leaf'] = tuple(range(1, 15))
             params['min_samples_split'] = tuple(range(2, 15))
         else:
+            if gui_params['option'] == purity_tuple[0]:
+                params['criterion'] = 'gini'
+            elif gui_params['option'] == purity_tuple[1]:
+                params['criterion'] = 'entropy'
+            elif gui_params['option'] == purity_tuple[2]:
+                params['criterion'] = 'log_loss'
             params['max_depth'] = None
             params['max_features'] = "sqrt"
             params['min_samples_leaf'] = 10
@@ -83,18 +82,14 @@ def training(classifier_str, train_x, train_y, gui_params):
         params['voting'] = gui_params['voting']
         params['weights'] = gui_params['weights']
         classifier = Custom_Ensemble()
-    
-    # Tuning
-    if gui_params['tuning'] and classifier_str != classifier_tuple[3] and classifier_str != classifier_tuple[4]:
-        tuner = GridSearchCV(classifier, params, cv=10, n_jobs=-1)
-        tuner.fit(train_x, train_y)
-        params = tuner.best_params_
-        print(params)
 
-    classifier.set_params(**params) # Set params tuned previously or at runtime
-    classifier.fit(train_x, train_y) # Train
+    return classifier, params
 
-    return classifier
+def tuning(classifier, params, train_x, train_y):
+    tuner = GridSearchCV(classifier, params, cv=5, n_jobs=-1)
+    tuner.fit(train_x, train_y)
+    print(tuner.best_params_)
+    return tuner.best_params_
 
 def compute_performances(test_y, pred_y):
     cm = confusion_matrix(test_y, pred_y)

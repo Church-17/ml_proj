@@ -230,19 +230,19 @@ class ML_Project_GUI:
             self.weight3.config(state=tk.ACTIVE)
 
     def classification(self):
-        classifier_params = {}
-        classifier_params["tuning"] = self.do_tuning.get()
+        gui_params = {}
+        gui_params["tuning"] = self.do_tuning.get()
         if self.classifier_picked == classifier_tuple[0] or self.classifier_picked == classifier_tuple[1] or self.classifier_picked == classifier_tuple[2]:
-            classifier_params['option'] = self.option_combobox.get()
+            gui_params['option'] = self.option_combobox.get()
         elif self.classifier_picked == classifier_tuple[4]:
             if self.weight_var == 0:
-                classifier_params['weights'] = [1, 1, 1]
+                gui_params['weights'] = [1, 1, 1]
             else:
-                classifier_params['weights'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
+                gui_params['weights'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
             if self.voting_var == "Hard Voting":
-                classifier_params['voting'] = 'hard'
+                gui_params['voting'] = 'hard'
             else:
-                classifier_params['voting'] = 'soft'
+                gui_params['voting'] = 'soft'
 
         X, y = split_attrib_class(self.dataset)
 
@@ -251,16 +251,24 @@ class ML_Project_GUI:
         X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
         self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(X, y, random_state=0, test_size=0.25)
         
+        classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
+
+        if gui_params['tuning'] and self.classifier_picked != classifier_tuple[3] and self.classifier_picked != classifier_tuple[4]:
+            self.notify_label.config(text='Tuning...', foreground='blue')
+            self.window.update()
+            classifier_params = tuning(classifier, classifier_params, self.train_x, self.train_y)
+
         self.notify_label.config(text='Training...', foreground='blue')
         self.window.update_idletasks()
-        classifier = training(self.classifier_picked, self.train_x, self.train_y, classifier_params)
+        classifier.set_params(**classifier_params)
+        classifier.fit(self.train_x, self.train_y)
 
         self.notify_label.config(text='Predicting...', foreground='blue')
         self.window.update_idletasks()
         self.pred_y = classifier.predict(self.test_x)
         self.pred_prob_y = classifier.predict_proba(self.test_x)
-        acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(self.test_y, self.pred_y)
 
+        acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(self.test_y, self.pred_y)
         self.accuracy.config(text=f"{acc}")
         self.TPR.config(text=f"{TPR}")
         self.TNR.config(text=f"{TNR}")
