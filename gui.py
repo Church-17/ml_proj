@@ -4,7 +4,7 @@ from dataset import split_attrib_class
 from sklearn.model_selection import train_test_split
 from preprocessing import *
 from classification import *
-from ROC import draw_roc_curve
+from ROC import ROC_Curve
 from Data_Analisys import start_analisys2
 
 def destroy_child(frame:Frame):
@@ -17,6 +17,7 @@ class ML_Project_GUI:
         self.title:str = "Machine Learning Project"
         self.dataset = dataset
         self.classifier_picked = None
+        self.roc_curve = ROC_Curve()
         self.setup_window()
 
     # Initialize window
@@ -126,7 +127,7 @@ class ML_Project_GUI:
         self.notify_label = Label(self.bottom_frame, font=("Helvetica", 11))
         self.analisys_button = Button(self.bottom_frame, text="Data Analisys", command=self.start_analisys) 
         self.start_button = Button(self.bottom_frame, text="Start", state=tk.DISABLED, command=self.classification)
-        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.roc_curve)
+        self.roc_button = Button(self.bottom_frame, text="ROC curve", state=tk.DISABLED, command=self.plot_roc_curve)
         self.close_button = Button(self.bottom_frame, text="Close", command=self.window.destroy)
 
         self.bottom_frame.grid(row=3, column=0, padx=10, pady=10, sticky=tk.EW)
@@ -253,7 +254,7 @@ class ML_Project_GUI:
                 gui_params['weights'] = [1, 1, 1]
             else:
                 gui_params['weights'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
-            if self.voting_var.get() == "Hard Voting":
+            if self.voting_var.get() == 0:
                 gui_params['voting'] = 'hard'
             else:
                 gui_params['voting'] = 'soft'
@@ -296,5 +297,5 @@ class ML_Project_GUI:
     def start_analisys(self):
         start_analisys2(self)
 
-    def roc_curve(self):
-        draw_roc_curve(self.test_y, self.pred_prob_y)
+    def plot_roc_curve(self):
+        self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y)
