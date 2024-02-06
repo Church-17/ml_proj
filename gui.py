@@ -188,12 +188,23 @@ class ML_Project_GUI:
             self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
 
             # Combobox for distance function
-            self.option_label = Label(self.classifier_option_frame, text="Distance:")
-            self.option_combobox = Combobox(self.classifier_option_frame, state='readonly')
+            self.distance_frame = Frame(self.classifier_option_frame)
+            self.option_label = Label(self.distance_frame, text="Distance:")
+            self.option_combobox = Combobox(self.distance_frame, state='readonly')
             self.option_combobox['values'] = distance_tuple
             self.option_combobox.current(0)
+            self.distance_frame.grid(row=0, column=0)
             self.option_label.grid(row=0, column=0)
             self.option_combobox.grid(row=1, column=0)
+
+            # Radiobutton for weights
+            self.knn_weight_var = tk.IntVar()
+            self.knn_weight_frame = Frame(self.classifier_option_frame)
+            self.uniform_rb = Radiobutton(self.knn_weight_frame, text="Uniform", variable=self.knn_weight_var, value=0)
+            self.distance_rb = Radiobutton(self.weight_frame, text="Distance", variable=self.knn_weight_var, value=1)
+            self.knn_weight_frame.grid(row=0, column=1)
+            self.uniform_rb.grid(row=0, column=0, sticky=tk.W)
+            self.distance_rb.grid(row=1, column=0, sticky=tk.W)
 
         elif(selected_option == classifier_tuple[0]): 
             self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
@@ -232,14 +243,17 @@ class ML_Project_GUI:
     def classification(self):
         gui_params = {}
         gui_params["tuning"] = self.do_tuning.get()
-        if self.classifier_picked == classifier_tuple[0] or self.classifier_picked == classifier_tuple[1] or self.classifier_picked == classifier_tuple[2]:
-            gui_params['option'] = self.option_combobox.get()
+        if self.classifier_picked == classifier_tuple[0] or self.classifier_picked == classifier_tuple[2]:
+            gui_params['option1'] = self.option_combobox.get()
+        elif self.classifier_picked == classifier_tuple[1]:
+            gui_params['option1'] = self.option_combobox.get()
+            gui_params['option2'] = self.knn_weight_var.get()
         elif self.classifier_picked == classifier_tuple[4]:
-            if self.weight_var == 0:
+            if self.weight_var.get() == 0:
                 gui_params['weights'] = [1, 1, 1]
             else:
                 gui_params['weights'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
-            if self.voting_var == "Hard Voting":
+            if self.voting_var.get() == "Hard Voting":
                 gui_params['voting'] = 'hard'
             else:
                 gui_params['voting'] = 'soft'
@@ -247,7 +261,7 @@ class ML_Project_GUI:
         X, y = split_attrib_class(self.dataset)
 
         self.notify_label.config(text='Preprocessing...', foreground='blue')
-        self.window.update_idletasks()
+        self.window.update()
         X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
         self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(X, y, random_state=0, test_size=0.25)
         
@@ -259,12 +273,12 @@ class ML_Project_GUI:
             classifier_params = tuning(classifier, classifier_params, self.train_x, self.train_y)
 
         self.notify_label.config(text='Training...', foreground='blue')
-        self.window.update_idletasks()
+        self.window.update()
         classifier.set_params(**classifier_params)
         classifier.fit(self.train_x, self.train_y)
 
         self.notify_label.config(text='Predicting...', foreground='blue')
-        self.window.update_idletasks()
+        self.window.update()
         self.pred_y = classifier.predict(self.test_x)
         self.pred_prob_y = classifier.predict_proba(self.test_x)
 
