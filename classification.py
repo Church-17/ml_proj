@@ -1,13 +1,13 @@
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from custom_Naive_Bayes import CustomNaiveBayes
-from cursom_Ensamble import Custom_Ensemble
+from custom_naive_bayes import CustomNaiveBayes
+from custom_ensemble import Custom_Ensemble
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
-classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Ensamble custom')
+classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Custom ensamble')
 weights_tuple = ('Uniform', 'Distance')
 distance_tuple = ('Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
