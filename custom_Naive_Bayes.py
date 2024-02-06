@@ -48,3 +48,6 @@ class CustomNaiveBayes(object):
         assert self.pred_y is not None
         return (self.pred_y == test_y).sum() / len(test_y)
     
+    def set_params(self, **params):
+        return 
+    
