@@ -48,7 +48,7 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
     elif reduction == reduction_tuple[3]:
         reduct_obj = GaussianRandomProjection(new_n_features)
     elif reduction == reduction_tuple[4]:
-        reduct_obj = FeatureAgglomeration()
+        reduct_obj = FeatureAgglomeration(n_clusters=5)
     elif reduction == reduction_tuple[5]:
         reduct_obj = VarianceThreshold(1)
     elif reduction == reduction_tuple[6]:
