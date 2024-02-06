@@ -14,10 +14,7 @@ class Custom_Ensemble:
 
     def set_params (self, weights, voting):      
         self.voting = voting
-        print(self.voting)
-
         self.w = np.array(weights)
-        print(self.w)
         self.labels = [0, 1]
         
 
@@ -47,4 +44,23 @@ class Custom_Ensemble:
                         voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]))
             pred_y.append(self.labels[np.argmax(voting[i][:])])
     
+        return pred_y 
+    
+    
+    def predict_proba(self, test_x):
+        proba = []
+        proba.append(self.kNN_clf.predict_proba(test_x))
+        proba.append(self.dTree_clf.predict_proba(test_x))
+        proba.append(self.gNB_clf.predict_proba(test_x))
+
+        pred_y = []
+        voting = np.zeros([len(test_x), 2])
+        
+        print(self.w)
+        for i in range(0, len(test_x)):
+            for j in range(0,3):
+                if self.voting == 'hard':
+                        voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]))
+                        voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]))
+            pred_y.append([voting[i][0],voting[i][1]])
         return pred_y 
