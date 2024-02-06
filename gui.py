@@ -26,8 +26,8 @@ class ML_Project_GUI:
         self.window = tk.Tk()
         self.window.title(self.title)
         self.window.focus_force()
-        self.window.geometry("500x450")
-        self.window.minsize(500, 450)
+        self.window.geometry("600x500")
+        self.window.minsize(600, 500)
         self.window.iconbitmap("growth.ico")
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)
@@ -44,33 +44,45 @@ class ML_Project_GUI:
         self.preproc_frame = Frame(self.window)
         self.preproc_title = Label(self.preproc_frame, text="Data preprocessing", font=("Helvetica", 12))
         self.sampling_title = Label(self.preproc_frame, text="Sampling")
-        self.balancing_title = Label(self.preproc_frame, text="Balancing")
+        self.undersampling_title = Label(self.preproc_frame, text="Undersampling")
+        self.oversampling_title = Label(self.preproc_frame, text="Oversampling")
         self.reduction_title = Label(self.preproc_frame, text="Dimensionality reduction")
+        self.imputation_title = Label(self.preproc_frame, text="Handle missing values")
         self.transformation_title = Label(self.preproc_frame, text="Transformation")
         self.sampling_combo = Combobox(self.preproc_frame, state='readonly')
         self.sampling_combo['values'] = sampling_tuple
         self.sampling_combo.current(0)
-        self.balancing_combo = Combobox(self.preproc_frame, state='readonly')
-        self.balancing_combo['values'] = balancing_tuple
-        self.balancing_combo.current(0)
+        self.undersampling_combo = Combobox(self.preproc_frame, state='readonly')
+        self.undersampling_combo['values'] = undersampling_tuple
+        self.undersampling_combo.current(0)
+        self.oversampling_combo = Combobox(self.preproc_frame, state='readonly')
+        self.oversampling_combo['values'] = oversampling_tuple
+        self.oversampling_combo.current(0)
         self.reduction_combo = Combobox(self.preproc_frame, state='readonly')
         self.reduction_combo['values'] = reduction_tuple
         self.reduction_combo.current(0)
         self.transformation_combo = Combobox(self.preproc_frame, state='readonly')
         self.transformation_combo['values'] = transformation_tuple
         self.transformation_combo.current(0)
+        self.imputation_combo = Combobox(self.preproc_frame, state='readonly')
+        self.imputation_combo['values'] = imputation_tuple
+        self.imputation_combo.current(0)
         
         self.preproc_frame.grid(row=0, column=0, sticky=tk.EW)
-        self.preproc_frame.columnconfigure((0, 1), weight=1)
-        self.preproc_title.grid(row=0, column=0, columnspan=2, pady=8)
-        self.sampling_title.grid(row=1, column=0, padx=20, pady=(5, 0))
-        self.balancing_title.grid(row=1, column=1, padx=20, pady=(5, 0))
-        self.reduction_title.grid(row=3, column=0, padx=20, pady=(5, 0))
-        self.transformation_title.grid(row=3, column=1, padx=20, pady=(5, 0))
-        self.sampling_combo.grid(row=2, column=0, padx=20, pady=2, sticky=tk.EW)
-        self.balancing_combo.grid(row=2, column=1, padx=20, pady=2, sticky=tk.EW)
-        self.reduction_combo.grid(row=4, column=0, padx=20, pady=2, sticky=tk.EW)
-        self.transformation_combo.grid(row=4, column=1, padx=20, pady=2, sticky=tk.EW)
+        self.preproc_frame.columnconfigure((0, 1, 2), weight=1)
+        self.preproc_title.grid(row=0, column=0, columnspan=3, pady=8)
+        self.sampling_title.grid(row=1, column=0, padx=10, pady=(5, 0))
+        self.undersampling_title.grid(row=1, column=1, padx=10, pady=(5, 0))
+        self.oversampling_title.grid(row=1, column=2, padx=10, pady=(5, 0))
+        self.reduction_title.grid(row=3, column=0, padx=10, pady=(5, 0))
+        self.transformation_title.grid(row=3, column=1, padx=10, pady=(5, 0))
+        self.imputation_title.grid(row=3, column=2, padx=10, pady=(5, 0))
+        self.sampling_combo.grid(row=2, column=0, padx=10, pady=2, sticky=tk.EW)
+        self.undersampling_combo.grid(row=2, column=1, padx=10, pady=2, sticky=tk.EW)
+        self.oversampling_combo.grid(row=2, column=2, padx=10, pady=2, sticky=tk.EW)
+        self.reduction_combo.grid(row=4, column=0, padx=10, pady=2, sticky=tk.EW)
+        self.transformation_combo.grid(row=4, column=1, padx=10, pady=2, sticky=tk.EW)
+        self.imputation_combo.grid(row=4, column=2, padx=10, pady=2, sticky=tk.EW)
         
         # Classifier frame
         self.classifier_frame = Frame(self.window)
@@ -149,14 +161,14 @@ class ML_Project_GUI:
         self.classifier_option_frame.destroy_child()
 
         if selected_option == classifier_tuple[4]:
-            self.classifier_option_frame.columnconfigure(tuple(range(3)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(4)), weight=1)
 
             # Radiobutton for hard or soft voting
             self.voting_var = tk.IntVar()
             self.voting_frame = Frame(self.classifier_option_frame)
             self.hardvoting_rb = Radiobutton(self.voting_frame, text="Hard voting", variable=self.voting_var, value=0)
             self.softvoting_rb = Radiobutton(self.voting_frame, text="Soft voting", variable=self.voting_var, value=1)
-            self.voting_frame.grid(row=0, column=0)
+            self.voting_frame.grid(row=0, column=1)
             self.hardvoting_rb.grid(row=0, column=0, sticky=tk.W)
             self.softvoting_rb.grid(row=1, column=0, sticky=tk.W)
 
@@ -165,9 +177,18 @@ class ML_Project_GUI:
             self.weight_frame = Frame(self.classifier_option_frame)
             self.unweighted_rb = Radiobutton(self.weight_frame, text="Non weighted", variable=self.weight_var, value=0, command=self.weight_options)
             self.weighted_rb = Radiobutton(self.weight_frame, text="Weighted", variable=self.weight_var, value=1, command=self.weight_options)
-            self.weight_frame.grid(row=0, column=1)
+            self.weight_frame.grid(row=0, column=2)
             self.unweighted_rb.grid(row=0, column=0, sticky=tk.W)
             self.weighted_rb.grid(row=1, column=0, sticky=tk.W)
+
+            # Radiobutton for standard or bagging
+            self.ensembling_var = tk.IntVar()
+            self.ensembling_frame = Frame(self.classifier_option_frame)
+            self.standard_rb = Radiobutton(self.ensembling_frame, text="Standard", variable=self.ensembling_var, value=0)
+            self.bagging_rb = Radiobutton(self.ensembling_frame, text="Bagging", variable=self.ensembling_var, value=1)
+            self.ensembling_frame.grid(row=0, column=0)
+            self.standard_rb.grid(row=0, column=0, sticky=tk.W)
+            self.bagging_rb.grid(row=1, column=0, sticky=tk.W)
 
             # Spinbox for weights
             self.weights_frame = Frame(self.classifier_option_frame)
@@ -178,7 +199,7 @@ class ML_Project_GUI:
             self.weight1.set(1)
             self.weight2.set(1)
             self.weight3.set(1)
-            self.weights_frame.grid(row=0, column=2)
+            self.weights_frame.grid(row=0, column=3)
             self.weights_label.grid(row=0, column=0, columnspan=3)
             self.weight1.grid(row=1, column=0, padx=4)
             self.weight2.grid(row=1, column=1, padx=4)
@@ -258,13 +279,17 @@ class ML_Project_GUI:
                 gui_params['voting'] = 'hard'
             else:
                 gui_params['voting'] = 'soft'
+            if self.ensembling_var.get() == 0:
+                gui_params['algorithm'] = 'standard'
+            else:
+                gui_params['algorithm'] = 'bagging'
 
         X, y = split_attrib_class(self.dataset)
 
         self.notify_label.config(text='Preprocessing...', foreground='blue')
         self.window.update()
-
-        self.train_x, self.test_x, self.train_y, self.test_y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
+        X, y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.balancing_combo.get(), self.sampling_combo.get())
+        self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(X, y, random_state=0, test_size=0.25)
         
         classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
 

@@ -6,6 +6,8 @@ from tkinter.ttk import *
 def data_analisys(self):
         self.window2 = tk.Toplevel()
         self.window2.geometry('300x230')
+        self.window2.minsize(300, 230)
+        self.window2.maxsize(300, 230)
         self.title:str = "Info dataset"
         self.window2.title(self.title)
         self.window2.columnconfigure(0, weight=1)

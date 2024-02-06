@@ -77,6 +77,7 @@ def init_classification(classifier_str, gui_params):
     elif classifier_str == classifier_tuple[4]:
         params['voting'] = gui_params['voting']
         params['weights'] = gui_params['weights']
+        params['algorithm'] = gui_params['algorithm']
         classifier = Custom_Ensemble()
 
     return classifier, params
