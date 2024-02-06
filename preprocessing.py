@@ -11,6 +11,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 from numpy.random import choice
 from sklearn.model_selection import train_test_split
+from sklearn.utils import resample
 
 imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
@@ -107,32 +108,23 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
         X, y = balance_obj.fit_resample(X, y)
 
     sample_dim = (len(y[y == 0]) + len(y[y == 1])) // 2
-    sampled_X = [0] * sample_dim
-    sampled_y = [0] * sample_dim
     if sampling == sampling_tuple[1]:
-        sampling_obj = choice(len(y), sample_dim)
-        for i in range(sample_dim):
-            sampled_X[i] = X[sampling_obj[i]][:]
-            sampled_y[i] = y[sampling_obj[i]][:]
+        X, y = resample(X, y, n_samples=sample_dim, replace=False, stratify=None)
 
     elif sampling == sampling_tuple[2]:
-        sampling_obj = choice(len(y), sample_dim, replace=True)
-        for i in range(sample_dim):
-            sampled_X[i] = X[sampling_obj[i]][:]
-            sampled_y[i] = y[sampling_obj[i]][:]
-        X = sampled_X
-        y = sampled_y
-
+        X, y = resample(X, y, n_samples=sample_dim, replace=True, stratify=None)
+        
     elif sampling == sampling_tuple[3]:
-        train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25, stratify=y)
-        return train_x, test_x, train_y, test_y
+        X, y = resample(X, y, n_samples=sample_dim, replace=False, stratify=y)
     
     elif sampling == sampling_tuple[4]:
-        sampling_obj_neg = choice(len(y[y == 0]), np.ceil((len(y[y == 0]) / len(y)) * sample_dim))
-        sampling_obj_pos = choice(len(y[y == 1]), len(y) - np.ceil((len(y[y == 0]) / len(y)) * sample_dim))
+        x1, y1 = resample(X[y == 0], y[y == 0], n_samples=int(np.ceil((len(y[y == 0]) / len(y)) * sample_dim)))
+        x2, y2 = resample(X[y == 1], y[y == 1], n_samples=int(np.ceil((len(y[y == 1]) / len(y)) * sample_dim)))
+
+        X = np.concatenate((x1, x2))
+        y = np.concatenate((y1, y2))
     
-        X = X[y in sampling_obj_neg or y in sampling_obj_pos]
-        y = y[y in sampling_obj_neg or y in sampling_obj_pos]
-    
-    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25, stratify=y)
+        print(len(x1), len(x2))
+
+    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
     return train_x, test_x, train_y, test_y
