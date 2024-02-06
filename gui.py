@@ -297,7 +297,7 @@ class ML_Project_GUI:
         self.notify_label.config(text='Preprocessing...', foreground='blue')
         self.window.update()
         
-        self.train_x, self.test_x, self.train_y, self.test_y = pre_processing(X, y, 'Mean', self.transformation_combo.get(), self.reduction_combo.get(), self.undersampling_combo.get(), self.oversampling_combo.get(), self.sampling_combo.get())
+        self.train_x, self.test_x, self.train_y, self.test_y = pre_processing(X, y, self.imputation_combo.get(), self.transformation_combo.get(), self.reduction_combo.get(), self.undersampling_combo.get(), self.oversampling_combo.get(), self.sampling_combo.get())
         
         classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
 

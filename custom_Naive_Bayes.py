@@ -9,7 +9,7 @@ class CustomNaiveBayes(object):
         _, counts = np.unique(train_y, return_counts=True)
         self.prob_neg = counts[0] / len(train_y)
         self.prob_pos = counts[1] / len(train_y)
-        self.n_attr = 4
+        self.n_attr = 64
         self.neg_means = np.zeros(self.n_attr)
         self.neg_variances = np.zeros(self.n_attr)
         self.pos_means = np.zeros(self.n_attr)
@@ -42,6 +42,14 @@ class CustomNaiveBayes(object):
 
     def predict_proba(self, test_x):
         assert self.probabilities is not None
+        for obj in range(len(test_x)):
+            sum = self.probabilities[obj].sum()
+            if sum == 0:
+                sum = np.finfo(float).eps
+            self.probabilities[obj][0] /= sum
+            self.probabilities[obj][1] /= sum
+            print(self.probabilities[obj])
+        
         return self.probabilities
 
     def score(self, test_x, test_y):
