@@ -37,7 +37,7 @@ def init_classification(classifier_str, gui_params):
     elif classifier_str == classifier_tuple[1]:
         classifier = KNeighborsClassifier()
         if gui_params['tuning']:
-            params['n_neighbors'] = tuple(range(1, 10))
+            params['n_neighbors'] = tuple(range(1, 20))
             params['weights'] = ('uniform','distance')
             params['metric'] = ('euclidean', 'manhattan', 'cosine', 'correlation')
         else:
@@ -63,7 +63,7 @@ def init_classification(classifier_str, gui_params):
         elif gui_params['option1'] == kernel_tuple[2]:
             params['kernel'] = 'rbf'
 
-        classifier = SVC()
+        classifier = SVC(probability=True)
         
         if gui_params['tuning']:
             params['C'] = tuple(range(0.1, 10, 0.1))
