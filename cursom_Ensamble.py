@@ -57,9 +57,8 @@ class Custom_Ensemble:
                 x1.append(xi)
                 y1.append(yi)
 
-                # Seleziona casualmente il 70% degli attributi
                 n_features = x.shape[1]
-                subset_size = int(0.5 * n_features)  # Calcola il 70% del numero totale di attributi
+                subset_size = int(0.85 * n_features) 
                 feature_indices = np.random.choice(n_features, size=subset_size, replace=False)
                 self.feature_sets.append(feature_indices)
             self.kNN_clf.fit(x1[0][:, feature_indices], y1[0])
