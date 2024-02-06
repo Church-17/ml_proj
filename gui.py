@@ -184,8 +184,8 @@ class ML_Project_GUI:
             self.weight3.grid(row=1, column=2, padx=4)
 
         elif(selected_option == classifier_tuple[1]):
-            self.classifier_option_frame.columnconfigure(tuple(range(1)), weight=1)
-            self.classifier_option_frame.columnconfigure(tuple(range(1, 3)), weight=0)
+            self.classifier_option_frame.columnconfigure(tuple(range(2)), weight=1)
+            self.classifier_option_frame.columnconfigure(tuple(range(2, 3)), weight=0)
 
             # Combobox for distance function
             self.distance_frame = Frame(self.classifier_option_frame)
@@ -201,7 +201,7 @@ class ML_Project_GUI:
             self.knn_weight_var = tk.IntVar()
             self.knn_weight_frame = Frame(self.classifier_option_frame)
             self.uniform_rb = Radiobutton(self.knn_weight_frame, text="Uniform", variable=self.knn_weight_var, value=0)
-            self.distance_rb = Radiobutton(self.weight_frame, text="Distance", variable=self.knn_weight_var, value=1)
+            self.distance_rb = Radiobutton(self.knn_weight_frame, text="Distance", variable=self.knn_weight_var, value=1)
             self.knn_weight_frame.grid(row=0, column=1)
             self.uniform_rb.grid(row=0, column=0, sticky=tk.W)
             self.distance_rb.grid(row=1, column=0, sticky=tk.W)
