@@ -7,6 +7,8 @@ class ROC_Curve(object):
         self.ann = None
 
     def draw_roc_curve(self, test_y, pred_prob_y):
+        "Plots ROC curve"
+        
         plt.title("ROC Curve")
         plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3)
         fpr, tpr, _ = roc_curve(test_y, pred_prob_y[:,1], pos_label=1)

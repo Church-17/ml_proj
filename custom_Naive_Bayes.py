@@ -1,21 +1,25 @@
 import numpy as np
 
 class CustomNaiveBayes(object):
+    "Custom Naive Bayes Classifier"
+
     def __init__(self):
         self.probabilities = None
         self.pred_y = None
 
     def fit(self, train_x, train_y):
+        "Fits the classificator"
+
         _, counts = np.unique(train_y, return_counts=True)
-        self.prob_neg = counts[0] / len(train_y)
+        self.prob_neg = counts[0] / len(train_y)    # Computing a priori probabilities
         self.prob_pos = counts[1] / len(train_y)
         self.n_attr = 64
-        self.neg_means = np.zeros(self.n_attr)
+        self.neg_means = np.zeros(self.n_attr)      
         self.neg_variances = np.zeros(self.n_attr)
         self.pos_means = np.zeros(self.n_attr)
         self.pos_variances = np.zeros(self.n_attr)
 
-        for i in range(self.n_attr):
+        for i in range(self.n_attr):                # Computing mean and variance of positive and negative classes
             self.neg_means[i] = np.mean(train_x[:,i][train_y == 0])
             self.neg_variances[i] = np.var(train_x[:,i][train_y == 0])
             self.pos_means[i] = np.mean(train_x[:,i][train_y == 1])
@@ -23,9 +27,12 @@ class CustomNaiveBayes(object):
 
 
     def predict(self, test_x):
+        "Predicts the target labels"
+
         self.probabilities = np.zeros((len(test_x), 2))
         self.pred_y = np.zeros(len(test_x))
 
+        # Computing the conditioned probabilities
         for obj in range(len(test_x)):
             pos_probability = self.prob_pos
             neg_probability = self.prob_neg
@@ -41,6 +48,8 @@ class CustomNaiveBayes(object):
         return self.pred_y
 
     def predict_proba(self, test_x):
+        "Probabilities to belong to the classes"
+
         assert self.probabilities is not None
         for obj in range(len(test_x)):
             sum = self.probabilities[obj].sum()
@@ -52,9 +61,12 @@ class CustomNaiveBayes(object):
         return self.probabilities
 
     def score(self, test_x, test_y):
+        "Computes the accuracy of the classifier"
+
         assert self.pred_y is not None
         return (self.pred_y == test_y).sum() / len(test_y)
     
     def set_params(self, **params):
+        "Setting of the hyperparameters"
         return 
     

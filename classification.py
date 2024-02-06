@@ -7,6 +7,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
 import numpy as np
 
+# Defining tuples for classifiers' options
 classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Custom ensamble')
 weights_tuple = ('Uniform', 'Distance')
 distance_tuple = ('Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
@@ -14,16 +15,18 @@ purity_tuple = ('Gini', 'Entropy', 'LogLoss')
 kernel_tuple = ('Linear', 'Polinomial', 'RBF')
 
 def init_classification(classifier_str, gui_params):
+    "Initializes the classifier with tuned hyperparameters"
     params = {}
 
+    # Decision Tree
     if classifier_str == classifier_tuple[0]:
         classifier = DecisionTreeClassifier()
-        if gui_params['tuning']:
+        if gui_params['tuning']:    # Real time tuning
             params['criterion'] = ('gini', 'entropy', 'log_loss')
             params['max_depth'] = [None] + list(range(2, 8))
             params['min_samples_leaf'] = tuple(range(1, 5))
             params['min_samples_split'] = tuple(range(2, 5))
-        else:
+        else:                       # Selecting purity metric and tuned params
             if gui_params['option1'] == purity_tuple[0]:
                 params['criterion'] = 'gini'
             elif gui_params['option1'] == purity_tuple[1]:
@@ -34,13 +37,14 @@ def init_classification(classifier_str, gui_params):
             params['min_samples_leaf'] = 3
             params['min_samples_split'] = 2
 
+    # K-Nearest Neighbour
     elif classifier_str == classifier_tuple[1]:
         classifier = KNeighborsClassifier()
-        if gui_params['tuning']:
+        if gui_params['tuning']:    # Real time tuning
             params['n_neighbors'] = tuple(range(1, 20))
             params['weights'] = ('uniform','distance')
             params['metric'] = ('euclidean', 'manhattan', 'cosine', 'correlation')
-        else:
+        else:                       # Selecting distance metric and tuned params
             if gui_params['option1'] == distance_tuple[0]:
                 params['metric'] = 'euclidean'
             elif gui_params['option1'] == distance_tuple[1]:
@@ -55,13 +59,14 @@ def init_classification(classifier_str, gui_params):
                 params['weights'] = 'distance'
             params['n_neighbors'] = 10
 
+    # Support Vector Machine
     elif classifier_str == classifier_tuple[2]:
         classifier = SVC(probability=True)
-        if gui_params['tuning']:
+        if gui_params['tuning']:    # Real time tuning
             params['kernel'] = ['linear', 'poly', 'rbf']
             params['C'] = tuple([float(x)/10 for x in range(10, 30)])
             params['gamma'] = tuple([float(x)/10 for x in range(0, 10)])
-        else:
+        else:                       # Selecting kernel and tuned params
             if gui_params['option1'] == kernel_tuple[0]:
                 params['kernel'] = 'linear'
             elif gui_params['option1'] == kernel_tuple[1]:
@@ -71,24 +76,30 @@ def init_classification(classifier_str, gui_params):
             params['C'] = 1.5
             params['gamma'] = 0.5
 
+    # Custom Naive Bayes
     elif classifier_str == classifier_tuple[3]:
         classifier = CustomNaiveBayes()
 
+    # Custom Ensemble
     elif classifier_str == classifier_tuple[4]:
-        params['voting'] = gui_params['voting']
-        params['weights'] = gui_params['weights']
-        params['algorithm'] = gui_params['algorithm']
+        params['voting'] = gui_params['voting']     # Voting policy
+        params['weights'] = gui_params['weights']   # Weights
+        params['algorithm'] = gui_params['algorithm']   # Ensemble training algorithm
         classifier = Custom_Ensemble()
 
     return classifier, params
 
 def tuning(classifier, params, train_x, train_y):
+    "Tuning of the hyperparameters of a classifier"
+
     tuner = GridSearchCV(classifier, params, cv=5, n_jobs=-1)
     tuner.fit(train_x, train_y)
     print(tuner.best_params_)
     return tuner.best_params_
 
 def compute_performances(test_y, pred_y):
+    "Computes the performances of a classifier"
+
     cm = confusion_matrix(test_y, pred_y)
     eps = np.finfo(float).eps
     TP = cm[1,1]

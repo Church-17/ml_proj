@@ -9,10 +9,10 @@ from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
 import numpy as np
-from numpy.random import choice
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 
+# Defining tuples for preprocessing tecniques
 imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
 undersampling_tuple = ('No undersampling', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid')
@@ -21,7 +21,9 @@ reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis
 transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
 
 def pre_processing(X, y, imputation, transformation, reduction, undersampling, oversampling, sampling):
-    # Handle missing values
+    "Performs preprocessing on the given data"
+
+    # Handling of missing values
     if imputation == imputation_tuple[0]:
         impute_obj = SimpleImputer(strategy='mean')
     elif imputation == imputation_tuple[1]:
@@ -45,7 +47,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     elif transformation == transformation_tuple[4]:
         X = normalize(X, 'l2')
 
-    # Dimensionality
+    # Dimensionality reduction
     new_n_features = 48
     if reduction == reduction_tuple[1]:
         reduct_obj = PCA()
@@ -76,6 +78,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     else:
         under_ratio = 2 * len(y[y==1]) / len(y)
     
+    # Undersampling
     if undersampling == undersampling_tuple[1]:
         balance_obj = RandomUnderSampler(sampling_strategy=under_ratio)
     elif undersampling == undersampling_tuple[2]:
@@ -96,6 +99,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     else:
         over_ratio = 1
 
+    # Oversampling
     if oversampling == oversampling_tuple[1]:
         balance_obj = RandomOverSampler(sampling_strategy=over_ratio)
     elif oversampling == oversampling_tuple[2]:
@@ -107,6 +111,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     if balance_obj:
         X, y = balance_obj.fit_resample(X, y)
 
+    # Sampling
     sample_dim = (len(y[y == 0]) + len(y[y == 1])) // 2
     if sampling == sampling_tuple[1]:
         X, y = resample(X, y, n_samples=sample_dim, replace=False, stratify=None)
