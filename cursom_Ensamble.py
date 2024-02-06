@@ -1,21 +1,23 @@
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
 
 
 
 
 class Custom_Ensemble:
     def __init__(self):
-        self.kNN_clf = KNeighborsClassifier(1)
-        self.dTree_clf = DecisionTreeClassifier(random_state=0)
-        self.gNB_clf = GaussianNB()
+        self.kNN_clf = KNeighborsClassifier(n_neighbors=5)
+        self.dTree_clf = DecisionTreeClassifier(max_depth=10, max_features=5, random_state=0)
+        self.gNB_clf = SVC(probability=True, kernel='rbf', C=1.0)
+
 
     def set_params (self, weights, voting):      
         self.voting = voting
-        self.w = np.array(weights)
+        self.w = np.array(weights).astype(int)
         self.labels = [0, 1]
+        self.wsum =  self.w.sum()
         
 
     def fit(self, x, y):
@@ -39,14 +41,22 @@ class Custom_Ensemble:
             for j in range(0,3):
                 if self.voting == 'hard':
                     if proba[j][i][1] > proba[j][i][0]:
-                        voting[i][1] += (1 * self.w[j])
-                    else: 
-                        voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]))
+                        voting[i][1] += (1 * self.w[j] / self.wsum)
+                    else:
+                        voting[i][0] += (1 * self.w[j]/ self.wsum)
+                else: 
+                    voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]/ self.wsum))
+                    voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))
+
+                    
             pred_y.append(self.labels[np.argmax(voting[i][:])])
-    
+
+        print(self.voting, ": ")
+        for i in range(0,10):
+            print(voting[i])
         return pred_y 
     
-    
+
     def predict_proba(self, test_x):
         proba = []
         proba.append(self.kNN_clf.predict_proba(test_x))
@@ -55,12 +65,10 @@ class Custom_Ensemble:
 
         pred_y = []
         voting = np.zeros([len(test_x), 2])
-        
-        print(self.w)
+
         for i in range(0, len(test_x)):
             for j in range(0,3):
-                if self.voting == 'hard':
-                        voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]))
-                        voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]))
+                voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]/ self.wsum))
+                voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))       
             pred_y.append([voting[i][0],voting[i][1]])
-        return pred_y 
+        return pred_y
