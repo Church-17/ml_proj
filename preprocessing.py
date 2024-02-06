@@ -7,6 +7,7 @@ from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutu
 from imblearn.under_sampling import RandomUnderSampler, InstanceHardnessThreshold, NearMiss, ClusterCentroids
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.cluster import KMeans
 
 imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
@@ -74,7 +75,7 @@ def pre_processing(X, y, imputation, transformation, reduction, balancing, sampl
     elif balancing == balancing_tuple[4]:
         balance_obj = NearMiss(version=2)
     elif balancing == balancing_tuple[5]:
-        balance_obj = ClusterCentroids()
+        balance_obj = ClusterCentroids(estimator=KMeans(n_init='auto'))
     elif balancing == balancing_tuple[6]:
         balance_obj = RandomOverSampler()
     elif balancing == balancing_tuple[7]:
