@@ -30,7 +30,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     elif imputation == imputation_tuple[1]:
         impute_obj = SimpleImputer(strategy='most_frequent')
     elif imputation == imputation_tuple[2]:
-        impute_obj = KNNImputer()
+        impute_obj = KNNImputer(n_neighbors=2)
     else:
         impute_obj = None
     if impute_obj:
