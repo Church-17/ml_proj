@@ -8,6 +8,8 @@ from ROC import ROC_Curve
 from Data_Analisys import data_analisys
 
 def destroy_child(frame:Frame):
+    "Destroys widgets that depend from a frame"
+
     for widget in frame.winfo_children():
         widget.destroy()
 Frame.destroy_child = destroy_child
@@ -151,6 +153,8 @@ class ML_Project_GUI:
         self.close_button.grid(row=0, column=4, padx=5, pady=5)
 
     def classifier_options(self, event):
+        "Sets the classifier with the options selected from GUI"
+
         selected_option = self.classifier_combo.get()
         if self.classifier_picked == selected_option:
             return
@@ -256,7 +260,7 @@ class ML_Project_GUI:
             self.option_label.grid(row=0, column=0)
             self.option_combobox.grid(row=1, column=0)
 
-    def weight_options(self): # managing weight selection
+    def weight_options(self): # managing weight selection (if vote is not weighted, the bottons are disabled)
         if self.weight_var.get() == 0:
             self.weight1.config(state=tk.DISABLED)
             self.weight2.config(state=tk.DISABLED)
@@ -268,21 +272,32 @@ class ML_Project_GUI:
 
     def classification(self):
         gui_params = {}
-        gui_params["tuning"] = self.do_tuning.get()
+        gui_params["tuning"] = self.do_tuning.get() # Choiche on the real time tuning
+
+        # Assigning purity measure to the tree
         if self.classifier_picked == classifier_tuple[0] or self.classifier_picked == classifier_tuple[2]:
             gui_params['option1'] = self.option_combobox.get()
+
+        # Assigning params to the tree        
         elif self.classifier_picked == classifier_tuple[1]:
             gui_params['option1'] = self.option_combobox.get()
             gui_params['option2'] = self.knn_weight_var.get()
+
+        # Assigning params to the ensemble classifier
         elif self.classifier_picked == classifier_tuple[4]:
+            # Selecting weights
             if self.weight_var.get() == 0:
                 gui_params['weights'] = [1, 1, 1]
             else:
                 gui_params['weights'] = [self.weight1.get(), self.weight2.get(), self.weight3.get()]
+            
+            # Selecting voting polcy
             if self.voting_var.get() == 0:
                 gui_params['voting'] = 'hard'
             else:
                 gui_params['voting'] = 'soft'
+
+            # Selecting trainining algorithm
             if self.ensembling_var.get() == 0:
                 gui_params['algorithm'] = 'standard'
             elif self.ensembling_var.get() == 1:
@@ -292,27 +307,27 @@ class ML_Project_GUI:
             elif self.ensembling_var.get() == 3:
                 gui_params['algorithm'] = 'forest'
 
-        X, y = split_attrib_class(self.dataset)
+        X, y = split_attrib_class(self.dataset) # Returns Feature matrix and labels vector of the dataset
 
-        self.notify_label.config(text='Preprocessing...', foreground='blue')
+        self.notify_label.config(text='Preprocessing...', foreground='blue')    # Status notification update
         self.window.update()
         
-        try:
+        try: # managing errors
             self.train_x, self.test_x, self.train_y, self.test_y = pre_processing(X, y, self.imputation_combo.get(), self.transformation_combo.get(), self.reduction_combo.get(), self.undersampling_combo.get(), self.oversampling_combo.get(), self.sampling_combo.get())
             
             classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
 
             if gui_params['tuning'] and self.classifier_picked != classifier_tuple[3] and self.classifier_picked != classifier_tuple[4]:
-                self.notify_label.config(text='Tuning...', foreground='blue')
+                self.notify_label.config(text='Tuning...', foreground='blue') # Status notification update
                 self.window.update()
-                classifier_params = tuning(classifier, classifier_params, self.train_x, self.train_y)
+                classifier_params = tuning(classifier, classifier_params, self.train_x, self.train_y) # Performing tuning of the hyperparameters
 
-            self.notify_label.config(text='Training...', foreground='blue')
+            self.notify_label.config(text='Training...', foreground='blue') # Status notification update
             self.window.update()
             classifier.set_params(**classifier_params)
             classifier.fit(self.train_x, self.train_y)
 
-            self.notify_label.config(text='Predicting...', foreground='blue')
+            self.notify_label.config(text='Predicting...', foreground='blue') # Status notification update
             self.window.update()
             self.pred_y = classifier.predict(self.test_x)
             self.pred_prob_y = classifier.predict_proba(self.test_x)
@@ -333,7 +348,9 @@ class ML_Project_GUI:
             print(error)
 
     def start_analisys(self):
+        "Shows data analisys"
         data_analisys(self.dataset)
 
     def plot_roc_curve(self):
+        "Plots ROC curve"
         self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y)
