@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix
 import numpy as np
 
 # Defining tuples for classifiers' options
-classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Custom ensamble')
+classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Classifier', 'Custom Naive Bayes', 'Custom ensemble')
 weights_tuple = ('Uniform', 'Distance')
 distance_tuple = ('Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
