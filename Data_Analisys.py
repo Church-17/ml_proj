@@ -5,15 +5,15 @@ import tkinter as tk
 from tkinter.ttk import *
 from dataset import split_attrib_class
 
-attr_list = [f"Attr{i+1}" for i in range(64)]
+attr_list = [f"Attr{i+1}" for i in range(64)]   # Name of attributes from the dataset
 
 def data_analisys(dataset):
     "Shows a tool for dataset analysis"
     
+    # Initializing the window
     window2 = tk.Toplevel()
     window2.geometry('500x500')
-    window2.minsize(500, 500)
-    window2.maxsize(500, 500)
+    window2.resizable(False, False)
     title:str = "Info dataset"
     window2.title(title)
     window2.columnconfigure(0, weight=1)
@@ -68,6 +68,7 @@ def data_analisys(dataset):
     attr_combo['values'] = attr_list
     attr_combo.grid(row=2, column=0)
 
+    # Printing statistics of a feature
     print_stats = lambda event : Label(desctiption_frame, text=dataset[attr_combo.get()].describe()).grid(row=3, column=0, pady=4)
 
     attr_combo.bind("<<ComboboxSelected>>", print_stats)

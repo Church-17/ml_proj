@@ -14,7 +14,7 @@ class CustomNaiveBayes(object):
         self.prob_neg = counts[0] / len(train_y)    # Computing a priori probabilities
         self.prob_pos = counts[1] / len(train_y)
         self.n_attr = 64
-        self.neg_means = np.zeros(self.n_attr)      
+        self.neg_means = np.zeros(self.n_attr)      # Initializing arrays for means and variances
         self.neg_variances = np.zeros(self.n_attr)
         self.pos_means = np.zeros(self.n_attr)
         self.pos_variances = np.zeros(self.n_attr)
@@ -37,11 +37,13 @@ class CustomNaiveBayes(object):
             pos_probability = self.prob_pos
             neg_probability = self.prob_neg
             record = test_x[obj]
+            # Computing numerators of probabilities to belong to positive or negative classes
             for attr in range(self.n_attr):
                 neg_probability *= (1/np.sqrt(2*np.pi*self.neg_variances[attr])) * np.exp(-1 * ((record[attr] - self.neg_means[attr])**2 / (2 * self.neg_variances[attr])))
                 pos_probability *= (1/np.sqrt(2*np.pi*self.pos_variances[attr])) * np.exp(-1 * ((record[attr] - self.pos_means[attr])**2 / (2 * self.pos_variances[attr])))
             self.probabilities[obj][0] = neg_probability
             self.probabilities[obj][1] = pos_probability
+            # Assigning the class by comparing numerators of probabilities
             if self.probabilities[obj][1] > self.probabilities[obj][0]:
                 self.pred_y[obj] = 1
 
@@ -51,14 +53,14 @@ class CustomNaiveBayes(object):
         "Probabilities to belong to the classes"
 
         assert self.probabilities is not None
-        for obj in range(len(test_x)):
+        for obj in range(len(test_x)):              # Computing real probabilities of belonging to positive or negative class
             sum = self.probabilities[obj].sum()
-            if sum == 0:
+            if sum == 0:                            # If the sum of probabilities is computed as 0, it is assigned as an infinitesimal
                 sum = np.finfo(float).eps
             self.probabilities[obj][0] /= sum
             self.probabilities[obj][1] /= sum
         
-        return self.probabilities
+        return self.probabilities                   # Returning real probabilities
 
     def score(self, test_x, test_y):
         "Computes the accuracy of the classifier"
