@@ -12,7 +12,7 @@ def data_analisys(dataset):
     
     # Initializing the window
     window2 = tk.Toplevel()
-    window2.geometry('500x500')
+    window2.geometry('500x510')
     window2.resizable(False, False)
     title:str = "Info dataset"
     window2.title(title)
