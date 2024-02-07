@@ -329,7 +329,8 @@ class ML_Project_GUI:
             self.roc_button.config(state=tk.ACTIVE)
 
         except Exception as error:
-            self.notify_label.config(text=f'Error: {error}', foreground='red')
+            self.notify_label.config(text='Error', foreground='red')
+            print(error)
 
     def start_analisys(self):
         data_analisys(self.dataset)
