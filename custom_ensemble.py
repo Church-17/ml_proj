@@ -23,7 +23,7 @@ class Custom_Ensemble:
             self.classificatore_2 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_3 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
 
-        #in caso di bagging o voosting o majority voting standard
+        #in caso di bagging o boosting o majority voting standard
         else:
             self.classificatore_1 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_2 = GaussianNB()
