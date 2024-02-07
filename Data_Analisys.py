@@ -30,7 +30,7 @@ def data_analisys(dataset):
     X = DataFrame(X)
 
     # Computing Dataset Statistics
-    balance_perc = (sum(y != b'1'))/(y.size) * 100
+    balance_perc = (sum(y != 1))/(y.size) * 100
     null_values = X.isnull().sum().sum()
     non_null_values = X.count().sum().sum()
     null_perc = (null_values / ((null_values + non_null_values))) * 100
