@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter.ttk import *
 from dataset import split_attrib_class
-from sklearn.model_selection import train_test_split
 from preprocessing import *
 from classification import *
 from ROC import ROC_Curve
