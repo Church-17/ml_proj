@@ -2,6 +2,7 @@ name: ML-proj
 dependencies:
   - python
   - pip
+    - threadpoolctl>=3.2.0
   - tk
   - numpy
   - pandas
