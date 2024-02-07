@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from preprocessing import *
 from classification import *
 from ROC import ROC_Curve
-from Data_Analisys import data_analisys
+from data_analisys import data_analisys
 
 def destroy_child(frame:Frame):
     "Destroys widgets that depend from a frame"
