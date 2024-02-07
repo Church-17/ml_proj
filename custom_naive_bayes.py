@@ -13,7 +13,7 @@ class CustomNaiveBayes(object):
         _, counts = np.unique(train_y, return_counts=True)
         self.prob_neg = counts[0] / len(train_y)    # Computing a priori probabilities
         self.prob_pos = counts[1] / len(train_y)
-        self.n_attr = 64
+        self.n_attr = train_x.shape[1]
         self.neg_means = np.zeros(self.n_attr)      # Initializing arrays for means and variances
         self.neg_variances = np.zeros(self.n_attr)
         self.pos_means = np.zeros(self.n_attr)
