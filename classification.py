@@ -33,7 +33,7 @@ def init_classification(classifier_str, gui_params):
                 params['criterion'] = 'entropy'
             elif gui_params['option1'] == purity_tuple[2]:
                 params['criterion'] = 'log_loss'
-            params['max_depth'] = 6     # Imputing tuned hyperparameters
+            params['max_depth'] = None     # Imputing tuned hyperparameters
             params['min_samples_leaf'] = 3
             params['min_samples_split'] = 2
 

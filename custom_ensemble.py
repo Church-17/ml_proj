@@ -19,20 +19,20 @@ class Custom_Ensemble:
 
         #in caso si voglia usare una random forest
         if self.algorithm == 'forest':
-            self.classificatore_1 = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
-            self.classificatore_2 = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
-            self.classificatore_3 = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+            self.classificatore_1 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
+            self.classificatore_2 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
+            self.classificatore_3 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
 
         #in caso si voglia utizzare il boosting
         elif self.algorithm == 'boosting':
-            self.classificatore_1 = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+            self.classificatore_1 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_2 = GaussianNB()
             self.classificatore_3 = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5) 
 
         #in caso di bagging o majority voting standard
         else:    
-            self.classificatore_1 = KNeighborsClassifier(n_neighbors=5)
-            self.classificatore_2 = DecisionTreeClassifier(max_depth=10, max_features=10, random_state=0)
+            self.classificatore_1 = KNeighborsClassifier(n_neighbors=2)
+            self.classificatore_2 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_3 = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)    
 
         #imposta i parametri del classificatore in base ai parametri scelti dall'utente nella GUI
