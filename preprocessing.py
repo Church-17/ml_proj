@@ -9,6 +9,7 @@ from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
 import numpy as np
+from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 
@@ -17,7 +18,7 @@ imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
 undersampling_tuple = ('No undersampling', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid')
 oversampling_tuple = ('No oversampling', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN')
-reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature agglomeration', 'Variance threshold', 'Best chi2 score', 'Best mutual info score', 'Backword selection', 'Forward selection')
+reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature agglomeration', 'Variance threshold', 'Best chi2 score', 'Best mutual info score', 'Backword selection', 'Forward selection', 'Correlation selection')
 transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization')
 
 def pre_processing(X, y, imputation, transformation, reduction, undersampling, oversampling, sampling):
@@ -67,6 +68,14 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
         reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=new_n_features, n_jobs= -1, direction='backward')
     elif reduction == reduction_tuple[9]:
         reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=new_n_features, n_jobs= -1, direction='forward')
+    elif reduction == reduction_tuple[10]:
+        correlation_matrix = DataFrame(X).corr()
+        corr_np = correlation_matrix.to_numpy()
+        corr_attr = np.concatenate((np.where(corr_np>0.90), np.where(corr_np<-0.90)), axis=1)
+        del_attr = [attr1 for attr0, attr1 in zip(corr_attr[0], corr_attr[1]) if attr1 > attr0]
+        unique_del = np.unique(del_attr)
+        X = np.delete(X, unique_del, 1)
+        reduct_obj = None
     else:
         reduct_obj = None
     if reduct_obj:
