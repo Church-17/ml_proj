@@ -1,5 +1,6 @@
 from scipy.stats import zscore
 import numpy as np
+from pandas import DataFrame
 import tkinter as tk
 from tkinter.ttk import *
 from dataset import split_attrib_class
@@ -26,6 +27,7 @@ def data_analisys(dataset):
     desctiption_frame.grid(row=1, column=0, pady=(0, 5), sticky=tk.NSEW)
 
     X, y = split_attrib_class(dataset)
+    X = DataFrame(X)
 
     # Computing Dataset Statistics
     balance_perc = (sum(y != b'1'))/(y.size) * 100
