@@ -93,7 +93,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     if undersampling == undersampling_tuple[1]:
         balance_obj = RandomUnderSampler(sampling_strategy=under_ratio)
     elif undersampling == undersampling_tuple[2]:
-        balance_obj = InstanceHardnessThreshold(sampling_strategy=under_ratio)
+        balance_obj = InstanceHardnessThreshold(sampling_strategy=under_ratio, n_jobs=-1)
     elif undersampling == undersampling_tuple[3]:
         balance_obj = NearMiss(sampling_strategy=under_ratio, version=1)
     elif undersampling == undersampling_tuple[4]:
