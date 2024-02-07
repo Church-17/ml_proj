@@ -53,11 +53,11 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     # Selecting the DIMENSIONALITY REDUCTION tecnique
     new_n_features = 48
     if reduction == reduction_tuple[1]:
-        reduct_obj = PCA()
+        reduct_obj = PCA(new_n_features)
     elif reduction == reduction_tuple[2]:
-        reduct_obj = SparseRandomProjection(new_n_features)
+        reduct_obj = SparseRandomProjection()
     elif reduction == reduction_tuple[3]:
-        reduct_obj = GaussianRandomProjection(new_n_features)
+        reduct_obj = GaussianRandomProjection()
     elif reduction == reduction_tuple[4]:
         reduct_obj = FeatureAgglomeration(n_clusters=5)
     elif reduction == reduction_tuple[5]:
