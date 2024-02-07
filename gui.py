@@ -60,7 +60,7 @@ class ML_Project_GUI:
         self.oversampling_combo = Combobox(self.preproc_frame, state='readonly')
         self.oversampling_combo['values'] = oversampling_tuple
         self.oversampling_combo.current(0)
-        self.reduction_combo = Combobox(self.preproc_frame, state='readonly')
+        self.reduction_combo = Combobox(self.preproc_frame, state='readonly', height=20)
         self.reduction_combo['values'] = reduction_tuple
         self.reduction_combo.current(0)
         self.transformation_combo = Combobox(self.preproc_frame, state='readonly')
