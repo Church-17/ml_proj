@@ -24,7 +24,7 @@ transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max
 def pre_processing(X, y, imputation, transformation, reduction, undersampling, oversampling, sampling):
     "Performs preprocessing on the given data"
 
-    # Handling of missing values
+    # Selecting the tecnique to HANDLE MISSING VALUES
     if imputation == imputation_tuple[0]:
         impute_obj = SimpleImputer(strategy='mean')
     elif imputation == imputation_tuple[1]:
@@ -34,9 +34,9 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     else:
         impute_obj = None
     if impute_obj:
-        X = impute_obj.fit_transform(X)
+        X = impute_obj.fit_transform(X) # Trasforing the dataset according to the selected tecnique
 
-    # Transformation
+    # Selecting the TRASFORMATION tecnique and applying the transformation to the dataset
     if transformation == transformation_tuple[1]:
         zScore = StandardScaler()
         X = zScore.fit_transform(X)
@@ -48,7 +48,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     elif transformation == transformation_tuple[4]:
         X = normalize(X, 'l2')
 
-    # Dimensionality reduction
+    # Selecting the DIMENSIONALITY REDUCTION tecnique
     new_n_features = 48
     if reduction == reduction_tuple[1]:
         reduct_obj = PCA()
@@ -68,26 +68,26 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
         reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=new_n_features, n_jobs= -1, direction='backward')
     elif reduction == reduction_tuple[9]:
         reduct_obj = SequentialFeatureSelector(KNeighborsClassifier(), n_features_to_select=new_n_features, n_jobs= -1, direction='forward')
-    elif reduction == reduction_tuple[10]:
+    elif reduction == reduction_tuple[10]:  # Correlation-based feature selection
         correlation_matrix = DataFrame(X).corr()
         corr_np = correlation_matrix.to_numpy()
-        corr_attr = np.concatenate((np.where(corr_np>0.90), np.where(corr_np<-0.90)), axis=1)
+        corr_attr = np.concatenate((np.where(corr_np>0.90), np.where(corr_np<-0.90)), axis=1)   # Correlation threshold = 0.9
         del_attr = [attr1 for attr0, attr1 in zip(corr_attr[0], corr_attr[1]) if attr1 > attr0]
         unique_del = np.unique(del_attr)
-        X = np.delete(X, unique_del, 1)
+        X = np.delete(X, unique_del, 1) # Filtering dataset: removing features with high correlation
         reduct_obj = None
     else:
         reduct_obj = None
     if reduct_obj:
-        X = reduct_obj.fit_transform(X, y)
+        X = reduct_obj.fit_transform(X, y)  # Trasforing the dataset according to the selected tecnique
     
-    # Balancing
-    if oversampling == oversampling_tuple[0]:
+    # BALANCING
+    if oversampling == oversampling_tuple[0]: # If only undersampling is requested
         under_ratio = 'auto'
-    else:
-        under_ratio = 2 * len(y[y==1]) / len(y)
+    else:                                     # If both undersampling and oversampling are requested
+        under_ratio = 2 * len(y[y==1]) / len(y)     # Proportion of dataset to undersample
     
-    # Undersampling
+    # Selecting the UNDERSAMPLING tecnique
     if undersampling == undersampling_tuple[1]:
         balance_obj = RandomUnderSampler(sampling_strategy=under_ratio)
     elif undersampling == undersampling_tuple[2]:
@@ -101,14 +101,14 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     else:
         balance_obj = None
     if balance_obj:
-        X, y = balance_obj.fit_resample(X, y)
+        X, y = balance_obj.fit_resample(X, y)   # Trasforing the dataset according to the selected tecnique
 
-    if undersampling == undersampling_tuple[0]:
+    if undersampling == undersampling_tuple[0]: # If only oversampling is requested
         over_ratio = 'auto'
-    else:
-        over_ratio = 1
+    else:                                       # If both undersampling and oversampling are requested
+        over_ratio = 1                          # Now the proportion to oversample is 1 (half oversampled, half undersampled)
 
-    # Oversampling
+    # Selecting the OVERSAMPLING tecnique
     if oversampling == oversampling_tuple[1]:
         balance_obj = RandomOverSampler(sampling_strategy=over_ratio)
     elif oversampling == oversampling_tuple[2]:
@@ -118,9 +118,9 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     else:
         balance_obj = None
     if balance_obj:
-        X, y = balance_obj.fit_resample(X, y)
+        X, y = balance_obj.fit_resample(X, y)   # Trasforing the dataset according to the selected tecnique
 
-    # Sampling
+    # Selecting the SAMPLING tecnique and sampling the dataset
     sample_dim = (len(y[y == 0]) + len(y[y == 1])) // 2
     if sampling == sampling_tuple[1]:
         X, y = resample(X, y, n_samples=sample_dim, replace=False, stratify=None)
@@ -138,5 +138,5 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
         X = np.concatenate((x1, x2))
         y = np.concatenate((y1, y2))
 
-    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)
+    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)   # Train - test split after preprocessing
     return train_x, test_x, train_y, test_y
