@@ -55,9 +55,9 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     if reduction == reduction_tuple[1]:
         reduct_obj = PCA(new_n_features)
     elif reduction == reduction_tuple[2]:
-        reduct_obj = SparseRandomProjection()
+        reduct_obj = SparseRandomProjection(new_n_features)
     elif reduction == reduction_tuple[3]:
-        reduct_obj = GaussianRandomProjection()
+        reduct_obj = GaussianRandomProjection(new_n_features)
     elif reduction == reduction_tuple[4]:
         reduct_obj = FeatureAgglomeration(new_n_features)
     elif reduction == reduction_tuple[5]:
