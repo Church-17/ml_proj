@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, roc_auc_score
-from classification import compute_performances
 
 class ROC_Curve(object):
     def __init__(self):
