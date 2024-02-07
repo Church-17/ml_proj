@@ -99,7 +99,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     elif undersampling == undersampling_tuple[4]:
         balance_obj = NearMiss(sampling_strategy=under_ratio, version=2)
     elif undersampling == undersampling_tuple[5]:
-        balance_obj = ClusterCentroids(sampling_strategy=under_ratio, estimator=KMeans(n_init='auto'))
+        balance_obj = ClusterCentroids(sampling_strategy=under_ratio, estimator=KMeans(n_init=10))
     else:
         balance_obj = None
     if balance_obj:
