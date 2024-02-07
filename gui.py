@@ -297,38 +297,42 @@ class ML_Project_GUI:
         self.notify_label.config(text='Preprocessing...', foreground='blue')
         self.window.update()
         
-        self.train_x, self.test_x, self.train_y, self.test_y = pre_processing(X, y, self.imputation_combo.get(), self.transformation_combo.get(), self.reduction_combo.get(), self.undersampling_combo.get(), self.oversampling_combo.get(), self.sampling_combo.get())
-        
-        classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
+        try:
+            self.train_x, self.test_x, self.train_y, self.test_y = pre_processing(X, y, self.imputation_combo.get(), self.transformation_combo.get(), self.reduction_combo.get(), self.undersampling_combo.get(), self.oversampling_combo.get(), self.sampling_combo.get())
+            
+            classifier, classifier_params = init_classification(self.classifier_picked, gui_params)
 
-        if gui_params['tuning'] and self.classifier_picked != classifier_tuple[3] and self.classifier_picked != classifier_tuple[4]:
-            self.notify_label.config(text='Tuning...', foreground='blue')
+            if gui_params['tuning'] and self.classifier_picked != classifier_tuple[3] and self.classifier_picked != classifier_tuple[4]:
+                self.notify_label.config(text='Tuning...', foreground='blue')
+                self.window.update()
+                classifier_params = tuning(classifier, classifier_params, self.train_x, self.train_y)
+
+            self.notify_label.config(text='Training...', foreground='blue')
             self.window.update()
-            classifier_params = tuning(classifier, classifier_params, self.train_x, self.train_y)
+            classifier.set_params(**classifier_params)
+            classifier.fit(self.train_x, self.train_y)
 
-        self.notify_label.config(text='Training...', foreground='blue')
-        self.window.update()
-        classifier.set_params(**classifier_params)
-        classifier.fit(self.train_x, self.train_y)
+            self.notify_label.config(text='Predicting...', foreground='blue')
+            self.window.update()
+            self.pred_y = classifier.predict(self.test_x)
+            self.pred_prob_y = classifier.predict_proba(self.test_x)
 
-        self.notify_label.config(text='Predicting...', foreground='blue')
-        self.window.update()
-        self.pred_y = classifier.predict(self.test_x)
-        self.pred_prob_y = classifier.predict_proba(self.test_x)
+            acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(self.test_y, self.pred_y)
+            self.accuracy.config(text=f"{acc}")
+            self.TPR.config(text=f"{TPR}")
+            self.TNR.config(text=f"{TNR}")
+            self.FPR.config(text=f"{FPR}")
+            self.FNR.config(text=f"{FNR}")
+            self.precision.config(text=f"{p}")
+            self.fmeasure.config(text=f"{F1}")
+            self.notify_label.config(text='End classification', foreground='green')
+            self.roc_button.config(state=tk.ACTIVE)
 
-        acc, TPR, TNR, FPR, FNR, p, F1 = compute_performances(self.test_y, self.pred_y)
-        self.accuracy.config(text=f"{acc}")
-        self.TPR.config(text=f"{TPR}")
-        self.TNR.config(text=f"{TNR}")
-        self.FPR.config(text=f"{FPR}")
-        self.FNR.config(text=f"{FNR}")
-        self.precision.config(text=f"{p}")
-        self.fmeasure.config(text=f"{F1}")
-        self.notify_label.config(text='End classification', foreground='green')
-        self.roc_button.config(state=tk.ACTIVE)
+        except Exception as error:
+            self.notify_label.config(text=f'Error: {error}', foreground='red')
 
     def start_analisys(self):
-        data_analisys(self)
+        data_analisys(self.dataset)
 
     def plot_roc_curve(self):
         self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y)
