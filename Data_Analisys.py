@@ -2,34 +2,30 @@ from scipy.stats import zscore
 import numpy as np
 import tkinter as tk
 from tkinter.ttk import *
+from dataset import split_attrib_class
 
 attr_list = [f"Attr{i+1}" for i in range(64)]
 
-def data_analisys(self):
+def data_analisys(dataset):
     "Shows a tool for dataset analysis"
     
-    self.window2 = tk.Toplevel()
-    self.window2.geometry('500x500')
-    self.window2.minsize(400, 480)
-    self.window2.maxsize(500, 500)
-    self.title:str = "Info dataset"
-    self.window2.title(self.title)
-    self.window2.columnconfigure(0, weight=1)
+    window2 = tk.Toplevel()
+    window2.geometry('500x500')
+    window2.minsize(500, 500)
+    window2.maxsize(500, 500)
+    title:str = "Info dataset"
+    window2.title(title)
+    window2.columnconfigure(0, weight=1)
 
-    self.data_frame = Frame(self.window2)
-    self.data_frame.columnconfigure((0, 1), weight=1)
+    data_frame = Frame(window2)
+    data_frame.columnconfigure((0, 1), weight=1)
+    data_frame.grid(row=0, column=0, pady=(0, 20), sticky=tk.NSEW)
 
-    global desctiption_frame
-    desctiption_frame = Frame(self.window2, )
-    desctiption_frame.columnconfigure((0, 1), weight=1)
-    
-    self.data_frame.grid(row=0, column=0, pady=(0, 20), sticky=tk.NSEW)
+    desctiption_frame = Frame(window2)
+    desctiption_frame.columnconfigure(0, weight=1)
     desctiption_frame.grid(row=1, column=0, pady=(0, 5), sticky=tk.NSEW)
 
-    global df
-    df =self.dataset
-    X=df.iloc[:,:-1] 
-    y=df.iloc[:,-1].to_numpy()[:,]
+    X, y = split_attrib_class(dataset)
 
     # Computing Dataset Statistics
     balance_perc = (sum(y != b'1'))/(y.size) * 100
@@ -43,38 +39,33 @@ def data_analisys(self):
     mean_std = X.std().mean()
 
     # Widgets for Dataset Statistics
-    Label(self.data_frame, text="Dataset Statistics:", font=("Helvetica", 12)).grid(row=0, column=0, columnspan=2)
-    Label(self.data_frame, text=f'Balance proportion:', font=("Helvetica", 10)).grid(row=1, column=0, padx=4)
-    Label(self.data_frame, text=f'Null values:', font=("Helvetica", 10)).grid(row=2, column=0, padx=4)
-    Label(self.data_frame, text=f'non-Null values:', font=("Helvetica", 10)).grid(row=3, column=0, padx=4)
-    Label(self.data_frame, text=f'Null values proportion:', font=("Helvetica", 10)).grid(row=4, column=0, padx=4)
-    Label(self.data_frame, text=f'Outliers:', font=("Helvetica", 10)).grid(row=5, column=0, padx=4)
-    Label(self.data_frame, text=f'Outliers proportion:', font=("Helvetica", 10)).grid(row=6, column=0, padx=4)
-    Label(self.data_frame, text=f'Minimum standard deviation:', font=("Helvetica", 10)).grid(row=7, column=0, padx=4)
-    Label(self.data_frame, text=f'Mean standard deviation', font=("Helvetica", 10)).grid(row=8, column=0, padx=4)
-    Label(self.data_frame, text=f'Maximum standard deviation:', font=("Helvetica", 10)).grid(row=9, column=0, padx=4)
-    Label(self.data_frame, text=f'{round(balance_perc,5)}%', font=("Helvetica", 10)).grid(row=1, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(null_values,5)}', font=("Helvetica", 10)).grid(row=2, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(non_null_values,5)}', font=("Helvetica", 10)).grid(row=3, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(null_perc,5)}%', font=("Helvetica", 10)).grid(row=4, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(num_outliers,5)}', font=("Helvetica", 10)).grid(row=5, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(outlier_perc,5)}%', font=("Helvetica", 10)).grid(row=6, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(min_std,5)}', font=("Helvetica", 10)).grid(row=7, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(max_std,5)}', font=("Helvetica", 10)).grid(row=8, column=1, padx=4, sticky=tk.W)
-    Label(self.data_frame, text=f'{round(mean_std,5)}', font=("Helvetica", 10)).grid(row=9, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text="Dataset Statistics:", font=("Helvetica", 12)).grid(row=0, column=0, columnspan=2)
+    Label(data_frame, text=f'Balance proportion:', font=("Helvetica", 10)).grid(row=1, column=0, padx=4)
+    Label(data_frame, text=f'Null values:', font=("Helvetica", 10)).grid(row=2, column=0, padx=4)
+    Label(data_frame, text=f'non-Null values:', font=("Helvetica", 10)).grid(row=3, column=0, padx=4)
+    Label(data_frame, text=f'Null values proportion:', font=("Helvetica", 10)).grid(row=4, column=0, padx=4)
+    Label(data_frame, text=f'Outliers:', font=("Helvetica", 10)).grid(row=5, column=0, padx=4)
+    Label(data_frame, text=f'Outliers proportion:', font=("Helvetica", 10)).grid(row=6, column=0, padx=4)
+    Label(data_frame, text=f'Minimum standard deviation:', font=("Helvetica", 10)).grid(row=7, column=0, padx=4)
+    Label(data_frame, text=f'Mean standard deviation', font=("Helvetica", 10)).grid(row=8, column=0, padx=4)
+    Label(data_frame, text=f'Maximum standard deviation:', font=("Helvetica", 10)).grid(row=9, column=0, padx=4)
+    Label(data_frame, text=f'{round(balance_perc,5)}%', font=("Helvetica", 10)).grid(row=1, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(null_values,5)}', font=("Helvetica", 10)).grid(row=2, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(non_null_values,5)}', font=("Helvetica", 10)).grid(row=3, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(null_perc,5)}%', font=("Helvetica", 10)).grid(row=4, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(num_outliers,5)}', font=("Helvetica", 10)).grid(row=5, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(outlier_perc,5)}%', font=("Helvetica", 10)).grid(row=6, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(min_std,5)}', font=("Helvetica", 10)).grid(row=7, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(max_std,5)}', font=("Helvetica", 10)).grid(row=8, column=1, padx=4, sticky=tk.W)
+    Label(data_frame, text=f'{round(mean_std,5)}', font=("Helvetica", 10)).grid(row=9, column=1, padx=4, sticky=tk.W)
 
     # Widget for Feature Analisys
-    Label(desctiption_frame, text="Feature Analysis:", font=("Helvetica", 12)).grid(row=0, column=0, columnspan=2, sticky=tk.N)
-    Label(desctiption_frame, text="Select the feature", font=("Helvetica", 10)).grid(row=1, column=0)
-    Button(desctiption_frame, text="Compute", command=print_stats).grid(row=2, column=1)
+    Label(desctiption_frame, text="Feature Analysis:", font=("Helvetica", 12)).grid(row=0, column=0, pady=4)
+    Label(desctiption_frame, text="Select the feature", font=("Helvetica", 10)).grid(row=1, column=0, pady=4)
+    attr_combo = Combobox(desctiption_frame, width=10, state='readonly')
+    attr_combo['values'] = attr_list
+    attr_combo.grid(row=2, column=0)
 
-    global combo
-    combo = Combobox(desctiption_frame, width=10, state='readonly')
-    combo['values'] = attr_list
-    combo.current(0)
-    combo.grid(row=2, column=0)
+    print_stats = lambda event : Label(desctiption_frame, text=dataset[attr_combo.get()].describe()).grid(row=3, column=0, pady=4)
 
-def print_stats():
-    "Prints the elementary statistics of a feature"
-
-    Label(desctiption_frame, text=df[combo.get()].describe()).grid(row=3, column=1)
+    attr_combo.bind("<<ComboboxSelected>>", print_stats)
