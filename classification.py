@@ -57,7 +57,7 @@ def init_classification(classifier_str, gui_params):
                 params['weights'] = 'uniform'
             elif gui_params['option2'] == 1:
                 params['weights'] = 'distance'
-            params['n_neighbors'] = 10  # Imputing tuned number of neighbours
+            params['n_neighbors'] = 2  # Imputing tuned number of neighbours
 
     # Support Vector Machine
     elif classifier_str == classifier_tuple[2]:
