@@ -140,5 +140,5 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
         X = np.concatenate((x1, x2))
         y = np.concatenate((y1, y2))
 
-    train_x, test_x, train_y, test_y = train_test_split(X, y, random_state=0, test_size=0.25)   # Train - test split after preprocessing
+    train_x, test_x, train_y, test_y = train_test_split(X, y, test_size=0.25)   # Train - test split after preprocessing
     return train_x, test_x, train_y, test_y
