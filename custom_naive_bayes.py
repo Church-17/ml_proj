@@ -8,7 +8,7 @@ class CustomNaiveBayes(object):
         self.pred_y = None
 
     def fit(self, train_x, train_y):
-        "Fits the classificator"
+        "Training of the classifier"
 
         _, counts = np.unique(train_y, return_counts=True)
         self.prob_neg = counts[0] / len(train_y)    # Computing a priori probabilities

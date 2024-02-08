@@ -8,52 +8,51 @@ from sklearn.utils import resample
 
 class Custom_Ensemble:
 
-    #inizializzazione del classificatore
+    # Initializing the classificator
     def __init__(self):
         pass
 
-    #imposta i parametri scelti in base al tipo di approccio che si vuole utilizzare
+
     def set_params (self, weights, voting, algorithm): 
+        "Initializes the classificators according to the specific approach and the selected parameters"
 
         self.algorithm = algorithm
 
-        #in caso si voglia usare una random forest
+        # Performs random forest ensemble
         if self.algorithm == 'forest':
             self.classificatore_1 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_2 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_3 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
 
-        #in caso di bagging o boosting o majority voting standard
+        # Performs standard ensemble (with bagging, boosting, majority voting)
         else:
             self.classificatore_1 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_2 = GaussianNB()
             self.classificatore_3 = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)  
 
-        #imposta i parametri del classificatore in base ai parametri scelti dall'utente nella GUI
-        self.voting = voting #tipolofia di voting (hard o soft)
-        self.w = np.array(weights).astype(int) #array contenente i pesi dei classificatori
-        self.labels = [0, 1] #label delle classi
-        self.wsum =  self.w.sum() #somma dei pesi
+        # Sets the params for the ensemble
+        self.voting = voting                    # voting policy (hard or soft)
+        self.w = np.array(weights).astype(int)  # weights
+        self.labels = [0, 1]                    # class labels
+        self.wsum =  self.w.sum()               # sum of the weights
         
+    def fit(self, X, y):
+        "Training of the classifier"
 
-     
-    #addestramento del classificatore
-    def fit(self, x, y):
-
-        #nel caso si stai utilizzando il majority voting standard
+        # If MAJORITY VOTING is selected
         if self.algorithm == 'standard':
-            self.classificatore_1.fit(x, y) #si addestrano in modo classico i classificatori
-            self.classificatore_2.fit(x, y)
-            self.classificatore_3.fit(x, y)
+            self.classificatore_3.fit(X, y)
+            self.classificatore_1.fit(X, y) # Training of each classifier
+            self.classificatore_2.fit(X, y)
             
-        #nel caso si stai utilizzando il bagging
+        # If BAGGING is selected
         elif self.algorithm == 'bagging':
-            x1 = [] # dichiaro le liste con i campioni di boostrap da usare per il bagging
-            y1 = [] # e le loro relative etichette
+            x1 = [] # Bootstrap samples
+            y1 = [] # Labels of the samples
 
-            for _ in range(3): 
-                xi, yi = resample(x, y) #creo il campione di bootstrap
-                x1.append(xi) #lo appendo alle liste di record
+            for _ in range(3): # Creating the sample training sets
+                xi, yi = resample(X, y)
+                x1.append(xi) 
                 y1.append(yi)
 
             self.classificatore_1.fit(x1[0], y1[0]) # addestro i 3 classificatori con i 3 campioni di bootstrap distinti
@@ -62,17 +61,17 @@ class Custom_Ensemble:
 
 
 
-        #nel caso si stai utilizzando il boosting
+        # If BOOSTING is selected
         elif self.algorithm == 'boosting':
 
-            sample_weights = np.full(x.shape[0], (1. / x.shape[0])) #inizializzo i pesi ad un valore uniforme
+            sample_weights = np.full(X.shape[0], (1. / X.shape[0])) # Initializing uniform weights for each sample record
 
-            for clf in [self.classificatore_1, self.classificatore_2, self.classificatore_3]: #scorro i classificatori
+            for clf in [self.classificatore_1, self.classificatore_2, self.classificatore_3]: # For each classifier...
 
-                clf.fit(x, y, sample_weight=sample_weights) #lo addestro con i record che possiedono il loro specifico peso
+                clf.fit(X, y, sample_weight=sample_weights) # Train it with the current training weights
 
-                #uso il classificatore per fare delle predizioni e in base alle sue performance aumento o diminuisco il suo peso nelle previsioni e il peso dei record classificati in modo errato
-                y_pred = clf.predict(x) 
+                # Performing predictions with the classifier and adjusting record's weights and classifier's weight according to its performances 
+                y_pred = clf.predict(X) 
                 incorrect = (y_pred != y)
                 error = np.mean(np.average(incorrect, weights=sample_weights, axis=0))
                 clf_weight = np.log((1. - error) / error) + np.log(2.)
@@ -80,105 +79,100 @@ class Custom_Ensemble:
                 sample_weights /= np.sum(sample_weights)
                 
 
-        #nel caso si stai utilizzando una random forest
+        # If RANDOM FOREST is selected
         if self.algorithm == 'forest':
-            x1 = [] #dichiaro le liste dei sottoinsiemi di record con le rispettive label
+            x1 = [] # Random forest samples
             y1 = []
-            self.feature_sets = [] #dichiaro le liste dei sottoinsiemi di attributi
-            for _ in range(3): #per ogni classificatore 
+            self.feature_sets = [] # List for the random subset of featutures
 
-                #calcolo il sottoinsieme di record
-                xi, yi = resample(x, y) 
+            for _ in range(3): # Creating the sample training set for each random tree
+                xi, yi = resample(X, y) 
                 x1.append(xi)
                 y1.append(yi)
 
-                #calcolo il sottoinsieme di feature
-                n_features = x.shape[1] 
+                # Extracting the random subset of features
+                n_features = X.shape[1] 
                 subset_size = int(0.85 * n_features) 
                 feature_indices = np.random.choice(n_features, size=subset_size, replace=False)
                 self.feature_sets.append(feature_indices)
 
-            #addestro gli alberi sui sottoinsiemi dei feature e record
+            # Training the trees on the basis of the random training sample and the random feature subset
             self.classificatore_1.fit(x1[0][:, feature_indices], y1[0])
             self.classificatore_2.fit(x1[1][:, feature_indices], y1[1])
             self.classificatore_3.fit(x1[2][:, feature_indices], y1[2])
 
-
-
     def predict(self, test_x):
+        "Predicts the target labels"
 
-        proba = []  #inizializzo la matrice delle probabilita
+        proba = []  # Matrix of probabilities
 
-        if self.algorithm == 'forest':  #se si sta utilizzando una random forest 
+        if self.algorithm == 'forest':  # If random forest is selected
             
-            #faccio la previsione considerando solo il sottoinsieme di attirbuti con cui è stato addestrato l'albero
+            # Predicting the probabilities on test set with each tree
             proba.append(self.classificatore_1.predict_proba(test_x[:, self.feature_sets[0]]))
             proba.append(self.classificatore_2.predict_proba(test_x[:, self.feature_sets[1]]))
             proba.append(self.classificatore_3.predict_proba(test_x[:, self.feature_sets[2]]))
         
-        else: #altrimenti calcolo normalmente le probabilita
+        else: # Otherwise, uses the standard ensemble
             proba.append(self.classificatore_1.predict_proba(test_x))
             proba.append(self.classificatore_2.predict_proba(test_x))
             proba.append(self.classificatore_3.predict_proba(test_x))
 
-        pred_y = np.zeros([len(test_x),1]) #inizializzo la lista delle classi predette
+        pred_y = np.zeros([len(test_x),1]) # List of the predicted classes
 
-        voting = np.zeros([len(test_x),2]) #inizializzo la matrice con i voti dei classificatori 
+        voting = np.zeros([len(test_x),2]) # Matrix of the probabilities for both classes 
 
-        for i in range(0, len(test_x)): #per tutti i record del test set
-            for j in range(0,3):  #per tutti i classificatori
+        for i in range(0, len(test_x)): # For each test record...
+            for j in range(0,3):  # For each classifier...
+                if self.voting == 'hard':  # If hard voting is selected
 
-                if self.voting == 'hard':  #se la tipologia di voto è l'hardvoting
-
-                    #agigungo 1 a voting solo nella colonna corrispondente alla classe con la probabilita predetta piu alta eventualmente moltiplicata per il peso della classe
+                    # Adding a vote for the class with the higher probability considering the weight of each classifier
                     if proba[j][i][1] > proba[j][i][0]:
                         voting[i][1] += (1 * self.w[j] / self.wsum)
                     else:
                         voting[i][0] += (1 * self.w[j]/ self.wsum)
                 
-                else: #altrimenti si sta usando un soft voting
-                    
-                    #aggiungo alla colonna di voting corrispondente ad una certa classe la probabilita predetta dai singoli classificatori, eventualmente moltiplicando il voto per il suo peso
+                else: # If soft voting is selected
+
+                    # Adding the probability estimated for each of the classes considering the weight of each classifier
                     voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]/ self.wsum))
                     voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))
 
                     
-            pred_y[i] = (self.labels[np.argmax(voting[i][:])]) #la classe predetta sara quella con la probabilita piu alta
+            pred_y[i] = (self.labels[np.argmax(voting[i][:])]) # The predicted class is the one if the higher probability
 
         return pred_y 
     
-
-
-    #predice la probabilita di un record di appartenenre ad una certa classe
     def predict_proba(self, test_x):
+        "Predicting the probabilities for each class"
 
-        proba = [] #inizializzo la matrice delle probabilita
+        proba = [] # Initializes the matrix of probabilities
 
-        if self.algorithm == 'forest': #se si sta utilizzando una random forest 
+        if self.algorithm == 'forest': # If random forest is selected
             proba.append(self.classificatore_1.predict_proba(test_x[:, self.feature_sets[0]])) #faccio la previsione considerando solo il sottoinsieme di attirbuti con cui è stato addestrato l'albero
             proba.append(self.classificatore_2.predict_proba(test_x[:, self.feature_sets[1]]))
             proba.append(self.classificatore_3.predict_proba(test_x[:, self.feature_sets[2]]))
         
-        else:  #altrimenti calcolo normalmente le probabilita
+        else:  # Otherwise, uses the standard ensemble to compute the probabilities
             proba.append(self.classificatore_1.predict_proba(test_x))
             proba.append(self.classificatore_2.predict_proba(test_x))
             proba.append(self.classificatore_3.predict_proba(test_x))
 
 
-        pred_y = np.zeros([len(test_x),2]) #inizializzo la lista delle classi predette
+        pred_y = np.zeros([len(test_x),2]) # Initializing the matrix of the predicted classes
 
-        voting = np.zeros([len(test_x), 2]) #inizializzo la matrice con i voti dei classificatori 
+        voting = np.zeros([len(test_x), 2]) # Initializing the matrix with the votes of each classifier 
 
-        for i in range(0, len(test_x)): #per tutti i record del test set
-            for j in range(0,3): #per tutti i classificatori
+        for i in range(0, len(test_x)): # For each test record...
+            for j in range(0,3): # For each classifier...
 
-                #aggiungo alla colonna di voting corrispondente ad una certa classe la probabilita predetta dai singoli classificatori, eventualmente moltiplicando il voto per il suo peso
+                # Adding the probability estimated for each of the classes considering the weight of each classifier
                 voting[i][0] += (float(proba[j][i][0]) * float(self.w[j]/ self.wsum)) 
                 voting[i][1] += (float(proba[j][i][1]) * float(self.w[j]/ self.wsum))  
 
             pred_y[i][0] = voting[i][0]
             pred_y[i][1] = voting[i][1]
             
-        return pred_y #restituisco le predizioni
+        return pred_y
 
 
