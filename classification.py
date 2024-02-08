@@ -12,7 +12,7 @@ classifier_tuple = ('Decision tree', 'K nearest neighbor', 'Support Vector Class
 weights_tuple = ('Uniform', 'Distance')
 distance_tuple = ('Euclidean', 'Manhattan', 'Cosine', 'Pearson correlation')
 purity_tuple = ('Gini', 'Entropy', 'LogLoss')
-kernel_tuple = ('Linear', 'Polinomial', 'RBF')
+kernel_tuple = ('RBF', 'Polinomial')
 
 def init_classification(classifier_str, gui_params):
     "Initializes the classifier with tuned hyperparameters"
@@ -63,16 +63,14 @@ def init_classification(classifier_str, gui_params):
     elif classifier_str == classifier_tuple[2]:
         classifier = SVC(probability=True)
         if gui_params['tuning']:    # Real time tuning
-            params['kernel'] = ['rbf']
+            params['kernel'] = ['rbf', 'poly']
             params['C'] = [float(x)/10 for x in range(15, 25)]
             params['gamma'] = [float(x)/10 for x in range(10, 20)]
         else:                       # Selecting kernel
             if gui_params['option1'] == kernel_tuple[0]:
-                params['kernel'] = 'linear'
+                params['kernel'] = 'rbf'
             elif gui_params['option1'] == kernel_tuple[1]:
                 params['kernel'] = 'poly'
-            elif gui_params['option1'] == kernel_tuple[2]:
-                params['kernel'] = 'rbf'
             params['C'] = 1.7       # Imputing tuned hyperparameters
             params['gamma'] = 1.4
 
