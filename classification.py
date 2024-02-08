@@ -63,9 +63,9 @@ def init_classification(classifier_str, gui_params):
     elif classifier_str == classifier_tuple[2]:
         classifier = SVC(probability=True)
         if gui_params['tuning']:    # Real time tuning
-            params['kernel'] = ['linear', 'poly', 'rbf']
-            params['C'] = tuple([float(x)/10 for x in range(10, 30)])
-            params['gamma'] = tuple([float(x)/10 for x in range(0, 10)])
+            params['kernel'] = ['poly', 'rbf']
+            params['C'] = [float(x)/10 for x in range(10, 30)]
+            params['gamma'] = [float(x)/10 for x in range(0, 10)]
         else:                       # Selecting kernel
             if gui_params['option1'] == kernel_tuple[0]:
                 params['kernel'] = 'linear'
