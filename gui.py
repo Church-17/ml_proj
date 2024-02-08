@@ -255,7 +255,7 @@ class ML_Project_GUI:
             self.option_label = Label(self.classifier_option_frame, text="Kernel")
             self.option_combobox = Combobox(self.classifier_option_frame, state='readonly')
             self.option_combobox['values'] = kernel_tuple
-            self.option_combobox.current(0)
+            self.option_combobox.current(2)
             self.option_label.grid(row=0, column=0)
             self.option_combobox.grid(row=1, column=0)
 

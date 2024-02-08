@@ -18,7 +18,7 @@ imputation_tuple = ('Mean', 'Most frequent', 'Neighbors')
 sampling_tuple = ('No sampling', 'Random without replacement', 'Random with replacement', 'Fixed stratified', 'Proportional stratified')
 undersampling_tuple = ('No undersampling', 'Random undersampling', 'Probabilistic undersampling', 'Nearest to nearest', 'Nearest to farthest', 'Cluster Centroid')
 oversampling_tuple = ('No oversampling', 'Random oversampling', 'Oversampling SMOTE', 'Oversampling ADASYN')
-reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature agglomeration', 'Variance threshold', 'Best chi2 score', 'Best mutual info score', 'Backword selection', 'Forward selection', 'Correlation selection')
+reduction_tuple = ('No dimensionality reduction', 'Principal Components Analysis', 'Sparse Random Projection', 'Gaussian Random Projection', 'Feature agglomeration', 'Variance threshold', 'Best chi2 score', 'Best mutual info score', 'Backward selection', 'Forward selection', 'Correlation selection')
 transformation_tuple = ('No transformation', 'Z-Score standardization', 'Min-Max standardization', 'L1 normalization', 'L2 normalization', 'Lmax normalization')
 
 def pre_processing(X, y, imputation, transformation, reduction, undersampling, oversampling, sampling):
@@ -30,7 +30,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     elif imputation == imputation_tuple[1]:
         impute_obj = SimpleImputer(strategy='most_frequent')
     elif imputation == imputation_tuple[2]:
-        impute_obj = KNNImputer()
+        impute_obj = KNNImputer(n_neighbors=2)
     else:
         impute_obj = None
     if impute_obj:
@@ -53,13 +53,13 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     # Selecting the DIMENSIONALITY REDUCTION tecnique
     new_n_features = 48
     if reduction == reduction_tuple[1]:
-        reduct_obj = PCA()
+        reduct_obj = PCA(new_n_features)
     elif reduction == reduction_tuple[2]:
         reduct_obj = SparseRandomProjection(new_n_features)
     elif reduction == reduction_tuple[3]:
         reduct_obj = GaussianRandomProjection(new_n_features)
     elif reduction == reduction_tuple[4]:
-        reduct_obj = FeatureAgglomeration(n_clusters=5)
+        reduct_obj = FeatureAgglomeration(new_n_features)
     elif reduction == reduction_tuple[5]:
         reduct_obj = VarianceThreshold(1)
     elif reduction == reduction_tuple[6]:
@@ -93,7 +93,7 @@ def pre_processing(X, y, imputation, transformation, reduction, undersampling, o
     if undersampling == undersampling_tuple[1]:
         balance_obj = RandomUnderSampler(sampling_strategy=under_ratio)
     elif undersampling == undersampling_tuple[2]:
-        balance_obj = InstanceHardnessThreshold(sampling_strategy=under_ratio)
+        balance_obj = InstanceHardnessThreshold(sampling_strategy=under_ratio, n_jobs=-1)
     elif undersampling == undersampling_tuple[3]:
         balance_obj = NearMiss(sampling_strategy=under_ratio, version=1)
     elif undersampling == undersampling_tuple[4]:
