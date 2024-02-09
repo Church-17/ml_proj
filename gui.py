@@ -352,4 +352,4 @@ class ML_Project_GUI:
 
     def plot_roc_curve(self):
         "Plots ROC curve"
-        self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y)
+        self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y, self.classifier_picked)
