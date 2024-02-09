@@ -7,15 +7,11 @@ from numpy import round
 
 class ROC_Curve(object):
     def __init__(self):
-        self.ann = None
         self.curve_list = []
-        self.counter = 0
         self.random_classifier_added = False
 
     def draw_roc_curve(self, test_y, pred_prob_y, classifier_name):
         "Plots ROC curve"
-
-        self.counter += 1
         
         plt.title("ROC Curve")
         if not self.random_classifier_added:
