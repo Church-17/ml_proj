@@ -18,6 +18,7 @@ class ML_Project_GUI:
         self.title:str = "Machine Learning Project"
         self.dataset = dataset
         self.classifier_picked = None
+        self.classifier_completed = None
         self.roc_curve = ROC_Curve()
         self.setup_window()
 
@@ -341,6 +342,7 @@ class ML_Project_GUI:
             self.fmeasure.config(text=f"{F1}")
             self.notify_label.config(text='End classification', foreground='green')
             self.roc_button.config(state=tk.ACTIVE)
+            self.classifier_completed = self.classifier_picked
 
         except Exception as error:
             self.notify_label.config(text='Error', foreground='red')
@@ -352,4 +354,4 @@ class ML_Project_GUI:
 
     def plot_roc_curve(self):
         "Plots ROC curve"
-        self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y, self.classifier_picked)
+        self.roc_curve.draw_roc_curve(self.test_y, self.pred_prob_y, self.classifier_completed)
