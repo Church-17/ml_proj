@@ -28,7 +28,7 @@ class Custom_Ensemble:
         else:
             self.classificatore_1 = DecisionTreeClassifier(max_depth=None, criterion='entropy', min_samples_leaf=3, min_samples_split=2)
             self.classificatore_2 = GaussianNB()
-            self.classificatore_3 = SVC(probability=True, kernel='rbf', C=1.5, gamma=0.5)  
+            self.classificatore_3 = SVC(probability=True, kernel='rbf', C=1.7, gamma=1.4)  
 
         # Sets the params for the ensemble
         self.voting = voting                    # voting policy (hard or soft)
