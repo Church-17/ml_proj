@@ -7,24 +7,20 @@ from numpy import round
 
 class ROC_Curve(object):
     def __init__(self):
-        self.curve_list = []
-        self.random_classifier_added = False
+        pass
 
     def draw_roc_curve(self, test_y, pred_prob_y, classifier_name):
         "Plots ROC curve"
         
         plt.title("ROC Curve")
-        if not self.random_classifier_added:
-            plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
-            self.random_classifier_added = True
-        else:
-            plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3)
+        plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
         
         fpr, tpr, _ = roc_curve(test_y, pred_prob_y[:,1], pos_label=1)
-        curve = plt.plot(fpr, tpr, label=f'{classifier_name}: {round(roc_auc_score(test_y, pred_prob_y[:,1]), 3)}')
-        self.curve_list.append(curve[0])  
+        plt.plot(fpr, tpr, label=f'{classifier_name}: {round(roc_auc_score(test_y, pred_prob_y[:,1]), 3)}')
         
-        plt.legend(loc='lower right') 
+        handles, labels = plt.gca().get_legend_handles_labels()
+        bkc_rnd, bkc_lbl = handles[0], labels[0]
+        handles, labels = handles[1::2], labels[1::2]
+        
+        plt.legend([bkc_rnd]+handles, [bkc_lbl]+labels, loc='lower right') 
         plt.show()
-
-        self.__init__()
