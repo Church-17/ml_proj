@@ -19,7 +19,7 @@ class ROC_Curve(object):
         
         plt.title("ROC Curve")
         if not self.random_classifier_added:
-            random_classifier = plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
+            plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
             self.random_classifier_added = True
         else:
             plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3)
