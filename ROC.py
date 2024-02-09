@@ -22,5 +22,5 @@ class ROC_Curve(object):
         fpr, tpr, _ = roc_curve(test_y, pred_prob_y[:,1], pos_label=1)
         self.curve_list.append(plt.plot(fpr, tpr, label=f'{classifier_name}: {round(roc_auc_score(test_y, pred_prob_y[:,1]), 3)}'))
         
-        plt.legend([random_classifier] + self.curve_list, self.legend, loc='lower right') # Plotting legend
+        plt.legend([random_classifier] + self.curve_list, loc='lower right') # Plotting legend
         plt.show()
