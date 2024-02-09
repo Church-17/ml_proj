@@ -1,30 +1,44 @@
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from classification import *
 from numpy import round
+from matplotlib.backend_bases import FigureCanvasBase
+
+random_classifier_added = False
 
 class ROC_Curve(object):
     def __init__(self):
+        self.ann = None
         self.curve_list = []
-        self.random_classifier_added = False
+        self.counter = 0
 
     def draw_roc_curve(self, test_y, pred_prob_y, classifier_name):
         "Plots ROC curve"
+
+        global random_classifier_added
+
+        self.counter += 1
         
         plt.title("ROC Curve")
-        if not self.random_classifier_added:
-            plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
-            self.random_classifier_added = True
+        if not random_classifier_added:
+            random_classifier = plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
+            random_classifier_added = True
         else:
             plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3)
         
         fpr, tpr, _ = roc_curve(test_y, pred_prob_y[:,1], pos_label=1)
         curve = plt.plot(fpr, tpr, label=f'{classifier_name}: {round(roc_auc_score(test_y, pred_prob_y[:,1]), 3)}')
-        self.curve_list.append(curve[0])  
+        self.curve_list.append(curve[0])  # Aggiungi solo l'oggetto Line2D, non la lista intera
         
-        plt.legend(loc='lower right') 
-        plt.show()
+        plt.legend(loc='lower right') # Plotting legend
 
-        self.__init__()
+        def on_close(event):
+            global random_classifier_added
+            random_classifier_added = False
+
+        canvas = plt.gcf().canvas
+        if isinstance(canvas, FigureCanvasBase):  # check if we're using a GUI backend
+            canvas.mpl_connect('close_event', on_close)
+
+        plt.show()
