@@ -13,10 +13,6 @@ class ROC_Curve(object):
 
     def draw_roc_curve(self, test_y, pred_prob_y, classifier_name):
         "Plots ROC curve"
-
-        global random_classifier_added
-
-        self.counter += 1
         
         plt.title("ROC Curve")
         plt.plot((0, 1), (0, 1), color='black', linestyle='dashed', alpha=0.3, label="Random classifier")
